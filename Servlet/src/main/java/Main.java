@@ -20,15 +20,15 @@ public class Main {
         final Map<String, String> initParams =
                 new HashMap<String, String>();
 
-        initParams.put("com.sun.jersey.config.property.packages",
-                "com.studiogobo.fi.matcher.resources");
+        initParams.put("javax.ws.rs.Application", "com.studiogobo.fi.Matcher.Servlet.Application");
+        initParams.put("com.sun.jersey.config.property.packages", "com.studiogobo.fi.Matcher.Servlet");
 
         System.out.println("Starting grizzly...");
         SelectorThread threadSelector =
                 GrizzlyWebContainerFactory.create(baseUri, initParams);
         System.out.println(String.format(
                 "Jersey app started with WADL available at %sapplication.wadl\n" +
-                "Try out %shelloworld\nHit enter to stop it...", baseUri, baseUri));
+                        "Hit enter to stop it...", baseUri));
         System.in.read();
         threadSelector.stopEndpoint();
         System.exit(0);

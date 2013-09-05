@@ -22,7 +22,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="Matcher" />
+        <module name="Model" />
+        <module name="Servlet" />
       </profile>
     </annotationProcessing>
   </component>

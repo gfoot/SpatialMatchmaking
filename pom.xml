@@ -4,27 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Matcher</groupId>
+    <groupId>com.studiogobo.fi.Matcher</groupId>
     <artifactId>Matcher</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+    <modules>
+        <module>Model</module>
+        <module>Servlet</module>
+    </modules>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>1.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-grizzly</artifactId>
-            <version>1.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.grizzly</groupId>
-            <artifactId>grizzly-servlet-webserver</artifactId>
-            <version>1.9.18-i</version>
-        </dependency>
-    </dependencies>
-
+    <properties>
+        <jersey-version>1.9</jersey-version>
+    </properties>
 
 </project>
