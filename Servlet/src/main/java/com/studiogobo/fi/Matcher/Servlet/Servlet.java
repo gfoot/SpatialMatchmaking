@@ -23,7 +23,7 @@ public class Servlet
 
     @GET
     @Path("clients/{id}")
-    @Produces("application/xml")
+    @Produces("application/json")
     public ClientRecord getClient(@PathParam("id") int id)
     {
         ServletClientRecord record = clientData.get(id);
@@ -41,7 +41,7 @@ public class Servlet
 
     @POST
     @Path("clients")
-    @Produces("application/xml")
+    @Produces("application/json")
     public Response createClient() throws InterruptedException
     {
         final int id = clientData.getNewId();
@@ -78,7 +78,7 @@ public class Servlet
 
     @GET
     @Path("matches")
-    @Produces("application/xml")
+    @Produces("application/json")
     public Response seekMatch(@QueryParam("client") int client_id, @Context javax.ws.rs.core.UriInfo uriInfo)
     {
         Log("    path " + uriInfo.getAbsolutePath());
@@ -109,7 +109,7 @@ public class Servlet
 
     @GET
     @Path("matches/{id}")
-    @Produces("application/xml")
+    @Produces("application/json")
     public MatchRecord getMatch(@PathParam("id") int id)
     {
         MatchRecord record = matchmaker.GetMatchRecord(id);

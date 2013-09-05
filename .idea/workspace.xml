@@ -2,18 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/ClientRecord.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Servlet/src/main/java/Main.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/MatchRecord.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Model/Model.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Servlet/Servlet.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/ServletClientRecord.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Model/pom.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Servlet/pom.xml" />
-      <change type="DELETED" beforePath="D:\IdeaProjects\Matcher\src\main\java\Main.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\IdeaProjects\Matcher\src\main\java\com\studiogobo\fi\Matcher\resources\HelloWorldResource.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_external_management_api_3_0_0_b012.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_gmbal_gmbal_api_only_3_0_0_b023.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_framework_2_1_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_http_2_1_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_http_server_2_1_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_http_servlet_2_1_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_grizzly_grizzly_rcm_2_1_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_javax_servlet_3_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Servlet/src/main/resources/index.html" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\Matcher\.idea\libraries\Maven__org_glassfish_api_dtds_resources_9_0_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\Matcher\.idea\libraries\Maven__org_glassfish_api_schemas_resources_9_0_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\Matcher\.idea\libraries\Maven__org_glassfish_distributions_web_all_10_0_build_20080430.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\Matcher\.idea\libraries\Maven__org_glassfish_embedded_gf_embedded_api_1_0_alpha_4.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Application.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Application.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/ClientRecord.java" afterPath="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/ClientRecord.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/JobQueue.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/JobQueue.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/Main.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/MatchRecord.java" afterPath="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/MatchRecord.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Matcher.iml" afterPath="$PROJECT_DIR$/Matcher.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Matchmaker.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Matchmaker.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__asm_asm_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__asm_asm_3_1.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_framework_1_9_18_i.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_framework_1_9_18_i.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_http_1_9_18_i.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_http_1_9_18_i.xml" />
@@ -22,28 +31,48 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_rcm_1_9_18_i.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_rcm_1_9_18_i.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_servlet_webserver_1_9_18_i.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_servlet_webserver_1_9_18_i.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_utils_1_9_18_i.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_grizzly_grizzly_utils_1_9_18_i.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_client_1_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_client_1_9.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_core_1_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_core_1_9.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_grizzly_1_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_grizzly_1_9.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_json_1_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_json_1_9.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_server_1_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_server_1_9.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_xml_bind_jaxb_impl_2_2_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_xml_bind_jaxb_impl_2_2_3_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_servlet_api_2_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_servlet_api_2_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_2_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_stream_stax_api_1_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_stream_stax_api_1_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_8_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_8_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_core_asl_1_8_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_core_asl_1_8_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_8_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_8_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_8_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_8_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_8_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_8_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jettison_jettison_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jettison_jettison_1_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__stax_stax_api_1_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__stax_stax_api_1_0_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Model.iml" afterPath="$PROJECT_DIR$/Model/Model.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/PerishableCollection.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/PerishableCollection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/Servlet.iml" afterPath="$PROJECT_DIR$/Servlet/Servlet.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/ServletClientRecord.java" afterPath="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/ServletClientRecord.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/pom.xml" afterPath="$PROJECT_DIR$/Model/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Servlet/pom.xml" afterPath="$PROJECT_DIR$/Servlet/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="D:\IdeaProjects\Matcher\.idea\libraries\Maven__com_sun_jersey_jersey_grizzly_1_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_grizzly2_1_9.xml" />
     </list>
     <ignored path="Matcher.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/pom.xml" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378382692083" ignored="false" />
     <file path="/Hello.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1377797273132" ignored="false" />
     <file path="/HelloWorldResource.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1377798705983" ignored="false" />
-    <file path="/fragment.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378383859805" ignored="false" />
-    <file path="/Dummy.txt" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378382944337" ignored="false" />
+    <file path="/fragment.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378397622793" ignored="false" />
+    <file path="/Dummy.txt" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378397622793" ignored="false" />
     <file path="/JobQueue.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378380043977" ignored="false" />
     <file path="/com.studiogobo.fi.Matcher.Model.Client.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378381740358" ignored="false" />
     <file path="/ClientRecord.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378388480096" ignored="false" />
@@ -52,8 +81,11 @@
     <file path="/Matchmaker.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378390679744" ignored="false" />
     <file path="/Servlet.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378390532802" ignored="false" />
     <file path="/web.xml" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378383586089" ignored="false" />
-    <file path="/Main.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378385168143" ignored="false" />
+    <file path="/Main.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378403695630" ignored="false" />
     <file path="/ServletClientRecord.java" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378388036045" ignored="false" />
+    <file path="/MultiClientTest.js" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378404536270" ignored="false" />
+    <file path="/index.html" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378403177053" ignored="false" />
+    <file path="/a.dummy" changelist="b1287cae-7b79-4983-a3a8-cdd0cd70fcb8" time="1378403669060" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +100,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -105,7 +136,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Application.java" line="17" class="com.studiogobo.fi.Matcher.Servlet.Application" package="com.studiogobo.fi.Matcher.Servlet">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -122,6 +153,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </line_breakpoints>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -131,41 +163,77 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Application.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Application.java">
+      <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="17" selection-start="486" selection-end="486" vertical-scroll-proportion="0.0">
+            <state line="35" column="0" selection-start="1369" selection-end="1369" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#318#326#0" expanded="true" />
-                <element signature="e#377#387#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JobQueue.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/JobQueue.java">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Servlet/src/main/resources/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="13" selection-start="275" selection-end="275" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Main.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/Main.java">
+      <file leaf-file-name="MultiClientTest.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Servlet/src/main/resources/MultiClientTest.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="66" selection-start="751" selection-end="751" vertical-scroll-proportion="0.0">
+            <state line="184" column="94" selection-start="4497" selection-end="4497" vertical-scroll-proportion="0.7461447">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Matchmaker.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="jquery-1.6.1.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Servlet/src/main/resources/jquery-1.6.1.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Servlet/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="40" column="39" selection-start="1476" selection-end="1476" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="16" selection-start="404" selection-end="404" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="0" selection-start="489" selection-end="489" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Matchmaker.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Matchmaker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="25" selection-start="2463" selection-end="2463" vertical-scroll-proportion="0.9430605">
+            <state line="72" column="0" selection-start="2463" selection-end="2463" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#849#870#0" expanded="true" />
@@ -175,51 +243,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PerishableCollection.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/PerishableCollection.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="23" selection-start="1384" selection-end="1384" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClientRecord.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/ClientRecord.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="16" selection-start="440" selection-end="440" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Servlet.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="51" selection-start="1433" selection-end="1433" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3409#3430#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MatchRecord.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/MatchRecord.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="22" selection-start="551" selection-end="551" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServletClientRecord.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/ServletClientRecord.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="21" selection-start="474" selection-end="474" vertical-scroll-proportion="0.0">
+            <state line="111" column="31" selection-start="2941" selection-end="2941" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -243,22 +270,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/Model/src/main/java/com.studiogobo.fi.Matcher.Model.Client.java" />
-        <option value="$PROJECT_DIR$/Servlet/pom.xml" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/Model/pom.xml" />
-        <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/JobQueue.java" />
         <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/PerishableCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/Main.java" />
         <option value="$PROJECT_DIR$/Servlet/src/main/webapp/WEB-INF/web.xml" />
         <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Application.java" />
-        <option value="$PROJECT_DIR$/Servlet/src/main/java/Main.java" />
         <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/ClientRecord.java" />
         <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/ServletClientRecord.java" />
         <option value="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/ClientRecord.java" />
         <option value="$PROJECT_DIR$/Model/src/main/java/com/studiogobo/fi/Matcher/Model/MatchRecord.java" />
-        <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java" />
         <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Matchmaker.java" />
+        <option value="$PROJECT_DIR$/Model/pom.xml" />
+        <option value="$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java" />
+        <option value="$PROJECT_DIR$/MultiClientTest/MultiClientTest.js" />
+        <option value="$PROJECT_DIR$/Servlet/pom.xml" />
+        <option value="$PROJECT_DIR$/Servlet/src/main/resources/index.html" />
+        <option value="$PROJECT_DIR$/Servlet/src/main/java/Main.java" />
+        <option value="$PROJECT_DIR$/Servlet/src/main/resources/MultiClientTest.js" />
       </list>
     </option>
   </component>
@@ -304,6 +331,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -312,6 +340,94 @@
               <option name="myItemId" value="Matcher" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Matcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: com.sun.grizzly:grizzly-http-servlet:1.9.18-i" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grizzly-http-servlet-1.9.18-i.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Matcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: com.sun.grizzly:grizzly-http:1.9.18-i" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grizzly-http-1.9.18-i.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Matcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: com.sun.grizzly:grizzly-http:1.9.18-i" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grizzly-http-1.9.18-i.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grizzly" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Matcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: com.sun.grizzly:grizzly-http:1.9.18-i" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grizzly-http-1.9.18-i.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="grizzly" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -352,6 +468,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -374,6 +494,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -462,6 +586,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -519,7 +647,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -532,16 +659,22 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\IdeaProjects\Matcher\Servlet\src\main\resources" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.Main">
     <configuration default="false" name="Main" type="Application" factoryName="Application" temporary="true">
@@ -575,19 +708,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -616,6 +736,19 @@
       <listeners />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" />
@@ -629,6 +762,13 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugSession" factoryName="Local" singleton="true">
+      <JSDebuggerConfigurationSettings>
+        <option name="engineId" />
+        <option name="fileUrl" />
+      </JSDebuggerConfigurationSettings>
       <method />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -697,7 +837,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="66" y="-8" width="2502" height="1456" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -715,7 +855,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.6700077" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.6700077" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299923" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -785,57 +925,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Model/Model.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="19" selection-start="453" selection-end="453" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Servlet/Servlet.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="16" selection-start="404" selection-end="404" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Servlet/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="20" selection-start="389" selection-end="389" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="66" selection-start="751" selection-end="751" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/PerishableCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="23" selection-start="1384" selection-end="1384" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/JobQueue.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="13" selection-start="275" selection-end="275" vertical-scroll-proportion="0.0">
@@ -846,11 +935,7 @@
     <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Application.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="17" selection-start="486" selection-end="486" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#318#326#0" expanded="true" />
-            <element signature="e#377#387#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -875,24 +960,81 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="51" selection-start="1433" selection-end="1433" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3409#3430#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Matchmaker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="25" selection-start="2463" selection-end="2463" vertical-scroll-proportion="0.9430605">
+        <state line="72" column="0" selection-start="2463" selection-end="2463" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#849#870#0" expanded="true" />
             <element signature="e#3154#3167#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/sun/jersey/jersey-grizzly/1.9/jersey-grizzly-1.9.jar!/com/sun/jersey/api/container/grizzly/GrizzlyWebContainerFactory.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="19" selection-start="185" selection-end="185" vertical-scroll-proportion="0.068108976">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="16" selection-start="404" selection-end="404" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="0" selection-start="489" selection-end="489" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/com/studiogobo/fi/Matcher/Servlet/Servlet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="111" column="31" selection-start="2941" selection-end="2941" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Servlet/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="39" selection-start="1476" selection-end="1476" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Servlet/src/main/java/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="0" selection-start="1369" selection-end="1369" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Servlet/src/main/resources/jquery-1.6.1.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Servlet/src/main/resources/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Servlet/src/main/resources/MultiClientTest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="184" column="94" selection-start="4497" selection-end="4497" vertical-scroll-proportion="0.7461447">
+          <folding />
         </state>
       </provider>
     </entry>

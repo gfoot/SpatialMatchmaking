@@ -1,5 +1,6 @@
-import com.sun.grizzly.http.SelectorThread;
-import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
+import com.sun.jersey.api.container.grizzly2.GrizzlyWebContainerFactory;
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,14 +25,20 @@ public class Main {
         initParams.put("com.sun.jersey.config.property.packages", "com.studiogobo.fi.Matcher.Servlet");
 
         System.out.println("Starting grizzly...");
-        SelectorThread threadSelector =
-                GrizzlyWebContainerFactory.create(baseUri, initParams);
+        HttpServer httpServer = GrizzlyWebContainerFactory.create(baseUri, initParams);
+        httpServer.getServerConfiguration().addHttpHandler(
+                new StaticHttpHandler(Main.class.getClassLoader().getResource("").getPath()),
+                "/static");
+
         System.out.println(String.format(
                 "Jersey app started with WADL available at %sapplication.wadl\n" +
                         "Hit enter to stop it...", baseUri));
+
         System.in.read();
-        threadSelector.stopEndpoint();
+
+        httpServer.stop();
         System.exit(0);
     }
+
 }
 

@@ -1,0 +1,64 @@
+.header
+{
+    width:100%;
+    background:#eeeeff;
+    margin:5px;
+}
+
+.headerButton
+{
+    font-size:12px;
+    padding:5px;
+    display:block;
+}
+
+.client
+{
+    float:left;
+    margin:5px;
+    border:1px solid gray;
+}
+
+.clientBody
+{
+    margin:5px;
+}
+
+.clientTitle
+{
+    width:100%;
+    background:#eeeeff;
+    font-size:12px;
+    position:relative;
+
+    border-bottom:1px solid gray;
+}
+
+.closeButton
+{
+    display:block;
+    float:right;
+    font-size:12px;
+    font-weight:bold;
+    text-align:center;
+    color:white;
+    text-decoration:none;
+    width:12px;
+    background-color:#ff8888;
+    top:0;
+    bottom:0;
+    right:0;
+    position:absolute;
+}
+
+body
+{
+    font-family:sans-serif;
+    font-size:80%;
+}
+
+.stateTable th
+{
+    text-align: left;
+    padding-right: 15px;
+}
