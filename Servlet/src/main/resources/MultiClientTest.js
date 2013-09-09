@@ -11,16 +11,50 @@ var count = 0;
 var baseUrl = "http://localhost:9998";
 $.support.cors = true;
 
+var statusLine;
+
 function init()
 {
     $("body").append($("<div id='header'/>").addClass("header"));
     $("body").append($("<div id='clients'/>").addClass("clients"));
 
+    statusLine = $("<div id='status'/>");
+    $("#header").append(statusLine);
+
     var newClientButton = $("<a href='javascript:'>New client</a>").addClass("headerButton");
     newClientButton.click(add_client);
     $("#header").append(newClientButton);
 
+    update_status();
+
     add_client();
+}
+
+function update_status()
+{
+    function scheduleRefresh()
+    {
+        setTimeout(
+            update_status,
+            2000);
+    }
+
+    $.ajax({
+        url: baseUrl + "/state",
+        type: "GET",
+        dataType: "json",
+        success: function(result)
+        {
+            $("#status").text("C: " + result["numClients"] + " (UM: " + result["numUnmatchedClients"] + ", PD: " + result["numClientsPendingDelete"] + "), M: " + result["numMatches"]);
+            scheduleRefresh();
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+            console.log("Status update failed - " + jqXHR.status + " - " + errorThrown);
+            $("#status").text("Status query failed");
+            scheduleRefresh();
+        }
+    });
 }
 
 function add_client()
@@ -73,9 +107,6 @@ function Client(name)
         $(".connectButton", this.view).click(
                 delegate(this, this.Connect));
 
-        $(".disconnectButton", this.view).click(
-                delegate(this, this.Disconnect));
-
         $(".clientTitleText", this.view).html(name);
 
         this.UpdateView();
@@ -102,7 +133,7 @@ function Client(name)
             dataType: "json",
             success: function(result)
             {
-                mStatus = result["state"];
+                mStatus = "Matching";
                 mClientID = result["@id"];
                 client.UpdateView();
             },

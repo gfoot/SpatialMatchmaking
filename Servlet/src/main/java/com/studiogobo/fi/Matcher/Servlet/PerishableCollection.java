@@ -115,6 +115,11 @@ public class PerishableCollection<T> //implements Map<Integer, T>
         }
     }
 
+    public int size()
+    {
+        return data.size();
+    }
+
     private Map<Integer, TimestampedT> data = new ConcurrentHashMap<Integer, TimestampedT>();
     private AtomicInteger idCounter = new AtomicInteger();
 

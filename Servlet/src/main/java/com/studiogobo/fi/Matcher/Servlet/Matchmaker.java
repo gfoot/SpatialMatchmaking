@@ -38,7 +38,7 @@ public class Matchmaker
         for (ServletClientRecord record : clientData.values())
         {
             // Ignore clients already in sessions
-            if (record.clientRecord.state != ClientRecord.State.Matching || record.match_id != 0)
+            if (record.match_id != 0)
                 continue;
 
             // Ignore the client we're trying to match
@@ -88,6 +88,8 @@ public class Matchmaker
     }
 
     public MatchRecord GetMatchRecord(int id) { return matchData.get(id); }
+    public void RemoveMatchRecord(int id) { matchData.remove(id); }
+    public int NumMatches() { return matchData.size(); }
 
     private PerishableCollection<ServletClientRecord> clientData;
     private PerishableCollection<MatchRecord> matchData = new PerishableCollection<MatchRecord>(5000);

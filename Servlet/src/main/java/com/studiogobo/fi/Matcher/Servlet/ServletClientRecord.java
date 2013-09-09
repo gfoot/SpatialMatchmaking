@@ -12,11 +12,11 @@ import com.studiogobo.fi.Matcher.Model.ClientRecord;
 public class ServletClientRecord
 {
     public ClientRecord clientRecord;
-    public int match_id;
+    public int match_id = 0;
+    public boolean deleted = false;
 
     public ServletClientRecord(ClientRecord _clientRecord)
     {
         clientRecord = _clientRecord;
-        match_id = 0;
     }
 }

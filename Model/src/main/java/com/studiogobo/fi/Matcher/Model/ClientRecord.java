@@ -10,15 +10,6 @@ public class ClientRecord
     @XmlAttribute
     public int id;
 
-    public enum State
-    {
-        Matching,
-        Matched,
-    }
-
-    @XmlElement
-    public State state;
-
     public ClientRecord()
     {
         this(0);
@@ -27,6 +18,5 @@ public class ClientRecord
     public ClientRecord(int _id)
     {
         id = _id;
-        state = State.Matching;
     }
 }
