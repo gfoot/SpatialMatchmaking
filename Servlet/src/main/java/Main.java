@@ -6,13 +6,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: george
- * Date: 29/08/13
- * Time: 18:30
- * To change this template use File | Settings | File Templates.
- */
 public class Main {
 
     public static void main(String[] args) throws IOException {

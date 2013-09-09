@@ -6,10 +6,8 @@ import com.studiogobo.fi.Matcher.Model.MatchRecord;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Path("/")
@@ -131,8 +129,7 @@ public class Servlet
 
         URI uri = uriInfo.getAbsolutePathBuilder().path("" + client.match_id).build();
         Log("    returning redirect to " + uri.toString());
-        Response response = Response.seeOther(uri).entity(client.clientRecord).build();
-        return response;
+        return Response.seeOther(uri).entity(client.clientRecord).build();
     }
 
     @GET
@@ -148,7 +145,7 @@ public class Servlet
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        Log("GET " + id + " => " + record.clients);
+        Log("GET " + id + " => " + Arrays.toString(record.clients));
 
         return record;
     }
