@@ -10,6 +10,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 @Path("/")
 public class Servlet
@@ -107,19 +108,26 @@ public class Servlet
     @Path("matches")
     @Produces("application/json")
     public Response seekMatch(@QueryParam("client") int client_id, @Context javax.ws.rs.core.UriInfo uriInfo)
+            throws InterruptedException
     {
         Log("    path " + uriInfo.getAbsolutePath());
         Log("match query for " + client_id);
 
         ServletClientRecord client = getServletClientRecord(client_id);
 
-        Log("    match id " + client.match_id);
+        if (client.waitUntilMatched.getCount() > 0)
+        {
+            Log("    waiting for match...");
+        }
 
-        if (client.match_id == 0)
+        boolean awaitResult = client.waitUntilMatched.await(30, TimeUnit.SECONDS);
+
+        if (!awaitResult)
         {
             return Response.status(404).header("Retry-After", "1").build();
         }
 
+        Log("    match id " + client.match_id);
 
         URI uri = uriInfo.getAbsolutePathBuilder().path("" + client.match_id).build();
         Log("    returning redirect to " + uri.toString());

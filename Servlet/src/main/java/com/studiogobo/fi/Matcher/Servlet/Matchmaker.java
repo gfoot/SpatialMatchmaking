@@ -77,7 +77,8 @@ public class Matchmaker
                 Log("        client " + record.clientRecord.id);
                 record.match_id = match.id;
 
-                // Signal anybody watching the record to say that it has changed?
+                // Signal anybody watching the record to say that it has changed
+                record.waitUntilMatched.countDown();
             }
         }
     }
