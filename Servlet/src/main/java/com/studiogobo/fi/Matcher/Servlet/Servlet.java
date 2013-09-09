@@ -117,7 +117,7 @@ public class Servlet
 
         if (client.match_id == 0)
         {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            return Response.status(404).header("Retry-After", "1").build();
         }
 
 
