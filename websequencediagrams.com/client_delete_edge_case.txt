@@ -1,0 +1,36 @@
+title Matcher Flow - Client Delete Edge Case
+
+C1->S1: GET /matches?client=40
+note over S1,S2:
+Matchmaking subsystem matches 
+clients 40 and 41 to each other
+end note
+S1->C1: 307 SeeOther /matches/15
+C1->S1: GET /matches/15
+S1->C1: 200 OK
+C1->C2: connect
+note over C2:
+  C2 does not want to accept until
+  it can verify that the connection
+  is from the right source
+end note
+note over C1:
+  C1 shouldn't really do this yet, 
+  it ought to wait until C2 has 
+  accepted the connection
+end note
+C1->S1: DELETE /clients/40
+S1->C1: 202 Accepted
+note over S1,S2:
+  The server has accepted the delete request,
+  but must defer it because C2 still needs 
+  access to the record being deleted.
+end note
+C2->S2: GET /matches?client=41
+S2->C2: 307 SeeOther /matches/15
+C2->S2: GET /matches/15
+S2->C2: 200 OK
+C2->S2: DELETE /clients/41
+S2->C2: 202 Accepted
+C2->C1: accept
+

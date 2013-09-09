@@ -1,0 +1,42 @@
+title Matcher Flow - Two Client Example
+
+note over C1,S1,S2,C2
+    S1 and S2 represent a single server, shown 
+    separately in the diagram for clarity
+end note
+note over C1: connect
+C1->S1: POST /clients
+S1->C1: 307 SeeOther /clients/40
+note over S1,S2: Submit client 40 for matchmaking
+
+  C1->S1: GET /matches?client=40
+  note over S1: waiting up to 30s
+  S1->C1: 404 Not found
+
+C1->S1: GET /matches?client=40
+note over S1: waiting up to 30s
+note over C2: connect
+C2->S2: POST /clients
+S2->C2: 307 SeeOther /clients/41
+note over S1,S2: Submit client 41 for matchmaking
+note over S1,S2: 
+Matchmaking subsystem matches 
+clients 40 and 41 to each other
+end note
+S1->C1: 307 SeeOther /matches/15
+C2->S2: GET /matches?client=41
+S2->C2: 307 SeeOther /matches/15
+C1->S1: GET /matches/15
+C2->S2: GET /matches/15
+S1->C1: 200 OK
+S2->C2: 200 OK
+note over C1,C2: The clients connect to each other successfully
+C1->S1: DELETE /clients/40
+C2->S2: DELETE /clients/41
+S1->C1: 202 Accepted
+S2->C2: 202 Accepted
+note over S1,S2:
+The server finds two 'deleted' client resources, matched to each 
+other, and deletes the client records and the match record
+end note
+

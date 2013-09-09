@@ -1,0 +1,51 @@
+title Matcher Flow - Client Registration
+
+note over C: connect
+C->S: POST /clients
+  note right of C:
+    location: ...,
+    requirements: { ... }
+  end note
+S->C: 307 SeeOther /clients/40
+note over S
+  The server submits client 40 to
+  the matchmaking subsystem
+end note
+
+opt Query the client resource
+  C->S: GET /clients/40
+  S->C: 200 OK
+  note left of S:
+    @id: 40,
+    location: ...,
+    requirements: {...}
+  end note
+end
+
+opt Update the client resource
+  C->S: PUT /clients/40
+  note right of C:
+    @id: 40,
+    location: ...,
+    requirements: { ... }
+  end note
+  S->C: 204 No Content
+note over S:
+The server cancels any existing 
+match and looks for a new one 
+based on the updated criteria
+end note
+end
+
+opt Delete the client resource
+  C->S: DELETE /clients/40
+  S->C: 202 Accepted
+  note over S:
+    The server marks the client as 
+    having renounced interest in 
+    the resource but does not 
+    delete it until it is sure no other
+    client will need to access it
+  end note
+end
+
