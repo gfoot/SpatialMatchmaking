@@ -16,6 +16,7 @@ public class Application extends javax.ws.rs.core.Application
     public Application()
     {
         singletons.add(servlet);
+        classes.add(JsonMessageBodyWriter.class);
     }
 
     @Override

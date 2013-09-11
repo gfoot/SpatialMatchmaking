@@ -1,6 +1,7 @@
 package com.studiogobo.fi.Matcher.Servlet;
 
 import com.studiogobo.fi.Matcher.Model.*;
+import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
 
 import java.util.ArrayList;
 
@@ -11,9 +12,9 @@ public class Matchmaker
         System.out.println(" MM: " + message);
     }
 
-    public void NewClient(int id)
+    public void UpdateClient(int id)
     {
-        Log("NewClient(" + id + ")");
+        Log("UpdateClient(" + id + ")");
 
         ServletClientRecord primaryClientRecord = clientData.get(id);
         if (primaryClientRecord == null)
@@ -43,6 +44,27 @@ public class Matchmaker
 
             // Ignore the client we're trying to match
             if (record.clientRecord.id == id)
+                continue;
+
+            // Ignore incompatible clients
+            boolean ok = true;
+            for (Requirement req : record.clientRecord.requirements)
+            {
+                if (!req.Evaluate(record.clientRecord, primaryClientRecord.clientRecord))
+                {
+                    ok = false;
+                    break;
+                }
+            }
+            for (Requirement req : primaryClientRecord.clientRecord.requirements)
+            {
+                if (!req.Evaluate(primaryClientRecord.clientRecord, record.clientRecord))
+                {
+                    ok = false;
+                    break;
+                }
+            }
+            if (!ok)
                 continue;
 
             foundClients.add(record);

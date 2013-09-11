@@ -1,14 +1,19 @@
 package com.studiogobo.fi.Matcher.Model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.studiogobo.fi.Matcher.Model.Requirements.RequireNotUuid;
+import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
 
-@XmlRootElement(name="client")
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
+
 public class ClientRecord
 {
-    @XmlAttribute
     public int id;
+
+    public UUID uuid = new UUID(0, 0);
+
+    public List<Requirement> requirements = new Vector<Requirement>();
 
     public ClientRecord()
     {
@@ -18,5 +23,9 @@ public class ClientRecord
     public ClientRecord(int _id)
     {
         id = _id;
+        RequireNotUuid requirement = new RequireNotUuid();
+        requirement.uuid = new UUID(0, 0);
+        requirements.add(requirement);
+        requirements.add(requirement);
     }
 }
