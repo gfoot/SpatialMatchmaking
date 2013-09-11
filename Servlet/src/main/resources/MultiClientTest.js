@@ -84,6 +84,14 @@ function delegate(obj, method)
     };
 }
 
+function UUID()
+{
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+}
+
 function Client(name)
 {
     if (!(this instanceof Client))
@@ -96,6 +104,7 @@ function Client(name)
     this.ctor = function()
     {
         this.name = name;
+        this.uuid = UUID();
 
         this.view = $("#client_template").clone()
                 .attr("id", name)
@@ -131,10 +140,12 @@ function Client(name)
             url: baseUrl + "/clients",
             type: "POST",
             dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify({"uuid": this.uuid}),
             success: function(result)
             {
                 mStatus = "Matching";
-                mClientID = result["@id"];
+                mClientID = result["id"];
                 client.UpdateView();
             },
             error: function()
@@ -201,7 +212,7 @@ function Client(name)
                 dataType: "json",
                 success: function(result)
                 {
-                    var sessionID = result["@id"];
+                    var sessionID = result["id"];
                     if (sessionID != "0")
                     {
                         mStatus = "Matched";
