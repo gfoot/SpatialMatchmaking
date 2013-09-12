@@ -3,13 +3,20 @@
     width:100%;
     background:#eeeeff;
     margin:5px;
+    padding:5px;
 }
 
 .headerButton
 {
     font-size:12px;
-    padding:5px;
-    display:block;
+    padding:7px 20px 7px 20px;
+    background:#f8f8ff;
+    border:1px solid #ddddff;
+}
+
+.headerButton:hover
+{
+    background:#f8fff8;
 }
 
 .client
@@ -22,6 +29,18 @@
 .clientBody
 {
     margin:5px;
+}
+
+.clientBody > div
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.clientBody > div > .value
+{
+    font-weight:normal;
 }
 
 .clientTitle
@@ -61,4 +80,8 @@ body
 {
     text-align: left;
     padding-right: 15px;
+}
+
+.uuidLabel {
+    font-size:12px;
 }

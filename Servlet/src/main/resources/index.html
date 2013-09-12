@@ -9,31 +9,28 @@
         <title>Client Test Interface</title>
     </head>
     <body>
+        <div id="header" class="header">
+            <div id='status'></div>
+            <p>
+                <a href='javascript:' id="newClientButton" class="headerButton">New client</a>
+            </p>
+        </div>
+        <div id="clients" class="clients"></div>
         <div id="client_template" class="client" style="display:none">
             <div class="clientTitle">
                 <span class="clientTitleText"></span>
                 <a href="javascript:" class="closeButton">X</a>
             </div>
-            <div class="clientBody" style="width:300px;height:200px">
-                <button class="connectButton">Connect</button>
-                <table class="stateTable">
-                    <tr>
-                        <th>Update time</th>
-                        <td class="updateTime"></td>
-                    </tr>
-                    <tr>
-                        <th>State</th>
-                        <td class="stateText">Not connected</td>
-                    </tr>
-                    <tr>
-                        <th>Client ID</th>
-                        <td class="clientID"></td>
-                    </tr>
-                    <tr>
-                        <th>Session</th>
-                        <td class="sessionID">None</td>
-                    </tr>
-                </table>
+            <div class="clientBody" id="clientBody" style="width:300px;height:200px">
+            </div>
+            <div id="clientBodyTemplates" style="display:none">
+                <div id="uuid">UUID: <span class="value">00000000-0000-0000-0000-000000000000</span></div>
+                <div id="stateText"><span class="value"></span></div>
+                <div id="updateTime">Last updated: <span class="value"></span></div>
+                <div id="clientID">Client ID: <span class="value"></span></div>
+                <div id="sessionID">Session: <span class="value"></span></div>
+                <div id="button"><button class="button">Register</button></div>
+                <div id="field"><span class="label"></span>: <span class="value"></span></div>
             </div>
         </div>
 

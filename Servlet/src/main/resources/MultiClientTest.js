@@ -1,29 +1,13 @@
-/**
- * Created by IntelliJ IDEA.
- * User: gfoot
- * Date: 16/05/11
- * Time: 12:25
- * To change this template use File | Settings | File Templates.
- */
 
 var count = 0;
 
 var baseUrl = "http://localhost:9998";
 $.support.cors = true;
 
-var statusLine;
-
 function init()
 {
-    $("body").append($("<div id='header'/>").addClass("header"));
-    $("body").append($("<div id='clients'/>").addClass("clients"));
-
-    statusLine = $("<div id='status'/>");
-    $("#header").append(statusLine);
-
-    var newClientButton = $("<a href='javascript:'>New client</a>").addClass("headerButton");
+    var newClientButton = $("#newClientButton");//<a href='javascript:'>New client</a>").addClass("headerButton");
     newClientButton.click(add_client);
-    $("#header").append(newClientButton);
 
     update_status();
 
@@ -66,14 +50,6 @@ function add_client()
     $("#clients").append(client.view);
 }
 
-function zero_pad(number)
-{
-    var digits = 2;
-    var fullString = "0000" + number.toString();
-    return fullString.substr(-digits);
-}
-
-
 function delegate(obj, method)
 {
     return function()
@@ -84,6 +60,9 @@ function delegate(obj, method)
     };
 }
 
+/**
+ * @return {string}
+ */
 function UUID()
 {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -97,43 +76,40 @@ function Client(name)
     if (!(this instanceof Client))
         return new Client(name);
 
-    var mStatus = "NotConnected";
     var mClientID = null;
     var mSessionID = null;
+    var mOtherClientInfo = null;
 
-    this.ctor = function()
+    var mErrors = [];
+
+    this.constructor = function()
     {
         this.name = name;
-        this.uuid = UUID();
+
+        this.info = {}
+        this.info.uuid = UUID();
+        this.info.requirements = [];
 
         this.view = $("#client_template").clone()
                 .attr("id", name)
                 .fadeIn("slow");
 
         $(".closeButton", this.view).click(
-                delegate(this, this.dtor));
-
-        $(".connectButton", this.view).click(
-                delegate(this, this.Connect));
+                delegate(this, this.destructor));
 
         $(".clientTitleText", this.view).html(name);
 
         this.UpdateView();
-
-        this.ScheduleUpdate();
     }
 
-    this.dtor = function()
+    this.destructor = function()
     {
-        this.Disconnect();
+        this.Unregister();
         this.view.remove();
     }
 
-    this.Connect = function()
+    this.Register = function()
     {
-        mStatus = "Connecting";
-        this.UpdateView();
-
         var client = this;
 
         $.ajax({
@@ -141,22 +117,23 @@ function Client(name)
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
-            data: JSON.stringify({"uuid": this.uuid}),
+            data: JSON.stringify(this.info),
             success: function(result)
             {
-                mStatus = "Matching";
                 mClientID = result["id"];
                 client.UpdateView();
+                client.GetMatch();
             },
-            error: function()
+            error: function(jqXHR, textStatus, errorThrown)
             {
-                mStatus = "ConnectionFailed";
+                alert("Client '" + name + "': registration failed - " + jqXHR.status + " - " + errorThrown);
+                mErrors.add("Registration failed");
                 client.UpdateView();
             }
         });
     }
 
-    this.Disconnect = function()
+    this.Unregister = function()
     {
         if (mClientID != null)
         {
@@ -166,89 +143,152 @@ function Client(name)
             });
         }
 
-        mStatus = "NotConnected";
         mClientID = null;
+        mSessionID = null;
         this.UpdateView();
+    }
+
+    this.GetMatch = function()
+    {
+        var client = this;
+        $.ajax({
+            url: baseUrl + "/matches?client=" + mClientID,
+            type: "GET",
+            dataType: "json",
+            success: function (result) {
+                var sessionID = result["id"];
+                if (sessionID != "0") {
+                    mSessionID = sessionID;
+                    client.GetMatchInfo();
+                }
+                else
+                {
+                    alert("Client '" + client.name + "' received zero match ID");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 404)
+                {
+                    // Try again
+                    setTimeout(delegate(client, client.GetMatch), 500);
+                }
+                else
+                {
+                    alert("Client " + mClientID + ": poll failed - " + jqXHR.status + " - " + errorThrown);
+                }
+            }
+        });
+    }
+
+    this.GetMatchInfo = function()
+    {
+        var client = this;
+        $.ajax({
+            url: baseUrl + "/matches/" + mSessionID,
+            type: "GET",
+            dataType: "json",
+            success: function(result)
+            {
+                var clients = result["clients"];
+                client.GetOtherClientInfo(clients[0] + clients[1] - mClientID);
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                alert("Match query failed for client " + mClientID + " getting match " + mSessionID + " - " +
+                    jqXHR.status + " - " + errorThrown);
+            }
+        });
+    }
+
+    this.GetOtherClientInfo = function(otherClientId)
+    {
+        var client = this;
+        $.ajax({
+            url: baseUrl + "/clients/" + otherClientId,
+            type: "GET",
+            dataType: "json",
+            success: function(result)
+            {
+                client.mOtherClientInfo = result;
+                client.UpdateView();
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                alert("Match query failed for client " + mClientID + " getting match " + mSessionID + " - " +
+                    jqXHR.status + " - " + errorThrown);
+            }
+        });
+    }
+
+    this.RejectMatch = function()
+    {
+        this.info.requirements.push({
+            "@type": "requireNotUuid",
+            "uuid": this.mOtherClientInfo["uuid"]
+        });
+
+        var client = this;
+        $.ajax({
+            url: baseUrl + "/clients/" + mClientID,
+            type: "PUT",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(this.info),
+            success: function (result) {
+                mSessionID = null;
+                client.UpdateView();
+                client.GetMatch();
+            }
+        })
     }
 
     this.UpdateView = function()
     {
-        $(".stateText", this.view).text(mStatus);
-        $(".clientID", this.view).text(mClientID);
-        $(".sessionID", this.view).text(mSessionID);
-    }
+        var clientBody = $("#clientBody", this.view)
 
-    this.ScheduleUpdate = function()
-    {
-        setTimeout(
-                delegate(this, this.Update),
-                2000);
-    }
-
-    this.Update = function()
-    {
-        var updateDate = new Date();
-
-        var updateDateText =
-                zero_pad(updateDate.getHours()) + ":" +
-                        zero_pad(updateDate.getMinutes()) + ":" +
-                        zero_pad(updateDate.getSeconds());
-
-        var element = $(".updateTime", this.view);
-        element.text(updateDateText);
-
-        element.css({"color": "#ff0000"});
-
-        if (mStatus != "Matching")
+        function field(label, value)
         {
-            this.EndUpdate();
+            var element = $("#field", "#clientBodyTemplates").clone();
+            element.find(".label").text(label);
+            element.find(".value").text(value);
+            clientBody.append(element);
+        }
+
+        function button(label, action) {
+            var element = $("#button", "#clientBodyTemplates").clone();
+            element.find(".button").text(label);
+            element.click(action);
+            clientBody.append(element);
+        }
+
+        clientBody.html("");
+
+        clientBody.append($("#stateText", "#clientBodyTemplates").clone());
+        var stateText = clientBody.find("#stateText").find(".value");
+        stateText.text(mClientID == null ? "Unregistered" : mSessionID == null ? "Matching" : "Matched");
+
+        field("UUID", this.info.uuid);
+
+        if (mClientID == null)
+        {
+            var label = button("Register", delegate(this, this.Register));
         }
         else
         {
-            var client = this;
-            $.ajax({
-                url: baseUrl + "/matches?client=" + mClientID,
-                type: "GET",
-                dataType: "json",
-                success: function(result)
-                {
-                    var sessionID = result["id"];
-                    if (sessionID != "0")
-                    {
-                        mStatus = "Matched";
-                        mSessionID = sessionID;
-                        console.log(result["clients"]);
-                        //$.ajax({url: baseUrl + "/clients/" + mClientID, type: "PUT", ...})
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown)
-                {
-                    if (jqXHR.status != 404)
-                        alert("Client " + mClientID + ": poll failed - " + jqXHR.status + " - " + errorThrown);
-                },
-                complete: function()
-                {
-                    client.EndUpdate();
-                }
-            });
+            field("Client ID", mClientID);
+
+            if (mSessionID == null)
+            {
+
+            }
+            else
+            {
+                field("Session ID", mSessionID);
+                button("Reject match", delegate(this, this.RejectMatch));
+            }
         }
     }
 
-    this.EndUpdate = function()
-    {
-        setTimeout(
-                function()
-                {
-                    var element = $(".updateTime", this.view);
-                    element.css({"color": "#000000"});
-                },
-                200);
-
-        this.UpdateView();
-
-        this.ScheduleUpdate();
-    }
-
-    this.ctor();
+    this.constructor();
 }
 
