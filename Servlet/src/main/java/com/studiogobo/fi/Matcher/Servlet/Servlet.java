@@ -159,8 +159,15 @@ public class Servlet
 
         if (client.match_id != 0)
         {
-            matchmaker.RemoveMatchRecord(client.match_id);
+            final int match_id = client.match_id;
             client.ClearMatch();
+
+            jobQueue.Enqueue(new Runnable() {
+                @Override
+                public void run() {
+                    matchmaker.RemoveMatch(match_id);
+                }
+            });
         }
 
         jobQueue.Enqueue(new Runnable() {
@@ -175,9 +182,8 @@ public class Servlet
 
     @DELETE
     @Path("clients/{id}")
-    public Response deleteClient(@PathParam("id") int id)
-    {
-        ServletClientRecord client = getServletClientRecord(id);
+    public Response deleteClient(@PathParam("id") int id) throws InterruptedException {
+        final ServletClientRecord client = getServletClientRecord(id);
         client.deleted = true;
 
         if (client.match_id == 0)
@@ -210,7 +216,13 @@ public class Servlet
                     {
                         clientData.remove(clientId);
                     }
-                    matchmaker.RemoveMatchRecord(client.match_id);
+
+                    jobQueue.Enqueue(new Runnable() {
+                        @Override
+                        public void run() {
+                            matchmaker.RemoveMatch(client.match_id);
+                        }
+                    });
                 }
             }
         }
@@ -312,8 +324,7 @@ public class Servlet
 
     @POST
     @Path("clients/{id}/delete")
-    public Response deleteClient2(@PathParam("id") int id)
-    {
+    public Response deleteClient2(@PathParam("id") int id) throws InterruptedException {
         return deleteClient(id);
     }
 

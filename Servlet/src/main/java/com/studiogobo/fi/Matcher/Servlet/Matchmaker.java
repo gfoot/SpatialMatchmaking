@@ -105,13 +105,41 @@ public class Matchmaker
         }
     }
 
+    public void RemoveMatch(int id)
+    {
+        MatchRecord match = matchData.remove(id);
+        if (match == null)
+            return;
+
+        // Remove the match reference from the client records
+        for (int clientId : match.clients)
+        {
+            ServletClientRecord client = clientData.get(clientId);
+            if (client == null) continue;
+
+            if (client.match_id == id) {
+                client.ClearMatch();
+
+                if (client.deleted)
+                {
+                    clientData.remove(clientId);
+                }
+            }
+        }
+
+        // Search again for matches for these clients
+        for (int clientId : match.clients)
+        {
+            UpdateClient(clientId);
+        }
+    }
+
     public Matchmaker(PerishableCollection<ServletClientRecord> data)
     {
         clientData = data;
     }
 
     public MatchRecord GetMatchRecord(int id) { return matchData.get(id); }
-    public void RemoveMatchRecord(int id) { matchData.remove(id); }
     public int NumMatches() { return matchData.size(); }
 
     private PerishableCollection<ServletClientRecord> clientData;

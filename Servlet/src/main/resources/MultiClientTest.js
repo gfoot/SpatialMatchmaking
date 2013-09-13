@@ -108,8 +108,24 @@ function Client(name)
         this.view.remove();
     }
 
+    var mDoLaterMethod = null;
+    this.DoLater = function(method, time)
+    {
+        this.ClearDoLater();
+
+        mDoLaterMethod = setTimeout(delegate(this, method), time);
+    }
+
+    this.ClearDoLater = function()
+    {
+        if (mDoLaterMethod != null)
+            clearTimeout(mDoLaterMethod);
+    }
+
     this.Register = function()
     {
+        this.ClearDoLater();
+
         var client = this;
 
         $.ajax({
@@ -126,7 +142,7 @@ function Client(name)
             },
             error: function(jqXHR, textStatus, errorThrown)
             {
-                alert("Client '" + name + "': registration failed - " + jqXHR.status + " - " + errorThrown);
+                alert(name + ": registration failed - " + jqXHR.status + " - " + errorThrown);
                 mErrors.add("Registration failed");
                 client.UpdateView();
             }
@@ -150,6 +166,9 @@ function Client(name)
 
     this.GetMatch = function()
     {
+        if (mClientID == null)
+        return;
+
         var client = this;
         $.ajax({
             url: baseUrl + "/matches?client=" + mClientID,
@@ -159,22 +178,34 @@ function Client(name)
                 var sessionID = result["id"];
                 if (sessionID != "0") {
                     mSessionID = sessionID;
+                    client.UpdateView();
                     client.GetMatchInfo();
                 }
                 else
                 {
-                    alert("Client '" + client.name + "' received zero match ID");
+                    alert(name + ": client received zero match ID");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 404)
                 {
                     // Try again
-                    setTimeout(delegate(client, client.GetMatch), 500);
+                    client.DoLater(client.GetMatch, 500);
+                }
+                else if (jqXHR.status == 400)
+                {
+                    console.log(name + ": poll failed, bad client ID (" + mClientID + ")? - " + jqXHR.status + " - " + errorThrown + " - " + textStatus);
+
+                    // Reregister
+                    mClientID = null;
+                    client.UpdateView();
                 }
                 else
                 {
-                    alert("Client " + mClientID + ": poll failed - " + jqXHR.status + " - " + errorThrown);
+                    alert(name + ": poll failed for client ID " + mClientID + " - " + jqXHR.status + " - " + errorThrown + " - " + textStatus);
+
+                    // Try again
+                    client.DoLater(client.GetMatch, 500);
                 }
             }
         });
@@ -194,8 +225,13 @@ function Client(name)
             },
             error: function(jqXHR, textStatus, errorThrown)
             {
-                alert("Match query failed for client " + mClientID + " getting match " + mSessionID + " - " +
+                alert(name + ": match query failed for match " + mSessionID + " - " +
                     jqXHR.status + " - " + errorThrown);
+
+                // Go back to waiting for matches
+                mSessionID = null;
+                client.UpdateView();
+                client.GetMatch();
             }
         });
     }
@@ -209,22 +245,100 @@ function Client(name)
             dataType: "json",
             success: function(result)
             {
-                client.mOtherClientInfo = result;
+                mOtherClientInfo = result;
+                console.log(mOtherClientInfo);
                 client.UpdateView();
+                client.Matched();
             },
             error: function(jqXHR, textStatus, errorThrown)
             {
-                alert("Match query failed for client " + mClientID + " getting match " + mSessionID + " - " +
-                    jqXHR.status + " - " + errorThrown);
+                if (jqXHR.status == 404)
+                {
+                    console.log(name + ": other client lost");
+                }
+                else
+                {
+                    alert(name + ": other client " + otherClientId + " query failed - " +
+                        jqXHR.status + " - " + errorThrown);
+                }
+
+                // Go back to waiting for matches
+                mSessionID = null;
+                client.UpdateView();
+                client.GetMatch();
+            }
+        });
+    }
+
+    this.Matched = function()
+    {
+        // TODO: we don't have client connection support yet, so for now just periodically check the match
+        // is still OK
+
+        var client = this;
+        var otherClientId = mOtherClientInfo["id"];
+        // Check the match record still exists
+        $.ajax({
+            url: baseUrl + "/matches/" + mSessionID,
+            type: "GET",
+            dataType: "json",
+            success: function(result) {
+                // Check the other client record still exists
+                $.ajax({
+                    url: baseUrl + "/clients/" + otherClientId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result)
+                    {
+                        // repeat
+                        client.DoLater(client.Matched, 500);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown)
+                    {
+                        if (jqXHR.status == 404)
+                        {
+                            console.log(name + ": other client lost");
+                        }
+                        else
+                        {
+                            alert(name + ": other client " + otherClientId + " query failed - " +
+                                jqXHR.status + " - " + errorThrown);
+                        }
+
+                        // Go back to waiting for matches
+                        mSessionID = null;
+                        client.UpdateView();
+                        client.GetMatch();
+                    }
+                })
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                if (jqXHR.status == 404)
+                {
+                    console.log(name + ": match lost");
+                }
+                else
+                {
+                    alert(name + ": match " + mSessionID + " query failed - " +
+                        jqXHR.status + " - " + errorThrown);
+                }
+
+                // Go back to waiting for matches
+                mSessionID = null;
+                client.UpdateView();
+                client.GetMatch();
             }
         });
     }
 
     this.RejectMatch = function()
     {
+        this.ClearDoLater();
+
         this.info.requirements.push({
             "@type": "requireNotUuid",
-            "uuid": this.mOtherClientInfo["uuid"]
+            "uuid": mOtherClientInfo["uuid"]
         });
 
         var client = this;
