@@ -4,6 +4,8 @@ var count = 0;
 var baseUrl = "http://localhost:9998";
 $.support.cors = true;
 
+var clients = {};
+
 function init()
 {
     var newClientButton = $("#newClientButton");//<a href='javascript:'>New client</a>").addClass("headerButton");
@@ -46,7 +48,7 @@ function add_client()
     count += 1;
 
     var client = new Client("Client " + count);
-
+    clients[client.name] = client;
     $("#clients").append(client.view);
 }
 
@@ -79,6 +81,8 @@ function Client(name)
     var mClientID = null;
     var mSessionID = null;
     var mOtherClientInfo = null;
+    var mConnecting = false;
+    var mConnected = false;
 
     var mErrors = [];
 
@@ -89,6 +93,9 @@ function Client(name)
         this.info = {}
         this.info.uuid = UUID();
         this.info.requirements = [];
+        this.info.connectionInfo = name;
+
+        this.inbox = [];
 
         this.view = $("#client_template").clone()
                 .attr("id", name)
@@ -272,8 +279,17 @@ function Client(name)
 
     this.Matched = function()
     {
-        // TODO: we don't have client connection support yet, so for now just periodically check the match
-        // is still OK
+        if (!mConnecting)
+        {
+            // Clear out the inbox - we're not ready to connect yet
+            while (this.inbox.pop()) {}
+        }
+        else
+        {
+            this.PollConnect();
+            if (mConnected)
+                return;
+        }
 
         var client = this;
         var otherClientId = mOtherClientInfo["id"];
@@ -356,6 +372,77 @@ function Client(name)
         })
     }
 
+    this.Send = function(otherClientName, message)
+    {
+        var otherClient = clients[otherClientName];
+        if (otherClient == null)
+        {
+            console.log(name + ": Send: client " + otherClientName + " not found");
+            return false;
+        }
+
+        otherClient.inbox.push([name, message]);
+
+        return true;
+    }
+
+    this.Connect = function()
+    {
+        this.Send(mOtherClientInfo.connectionInfo, "ping");
+
+        mConnecting = true;
+        this.UpdateView();
+    }
+
+    this.PollConnect = function()
+    {
+        var inboxItem;
+        while (inboxItem = this.inbox.pop())
+        {
+            var otherClient = inboxItem[0];
+            var message = inboxItem[1];
+            if (otherClient == mOtherClientInfo.connectionInfo)
+            {
+                if (message == "ping")
+                {
+                    this.Send(mOtherClientInfo.connectionInfo, "pong");
+                    this.Connected();
+                    return;
+                }
+                else if (message == "pong")
+                {
+                    this.Connected();
+                    return;
+                }
+                else
+                {
+                    console.log(name + ": PollConnect: unrecognized message: " + message);
+                }
+            }
+        }
+    }
+
+    this.Connected = function()
+    {
+        mConnecting = false;
+        mConnected = true;
+        this.UpdateView();
+
+        $.ajax({
+            url: baseUrl + "/clients/" + mClientID,
+            type: "DELETE"
+        });
+    }
+
+    this.CancelConnect = function()
+    {
+        if (mConnecting && !mConnected)
+        {
+            mConnecting = false;
+            this.UpdateView();
+        }
+    }
+
     this.UpdateView = function()
     {
         var clientBody = $("#clientBody", this.view)
@@ -377,9 +464,19 @@ function Client(name)
 
         clientBody.html("");
 
-        clientBody.append($("#stateText", "#clientBodyTemplates").clone());
-        var stateText = clientBody.find("#stateText").find(".value");
-        stateText.text(mClientID == null ? "Unregistered" : mSessionID == null ? "Matching" : "Matched");
+        var stateText = "Bad state";
+        if (mClientID == null)
+            stateText = "Unregistered";
+        else if (mSessionID == null)
+            stateText = "Matching";
+        else if (!mConnecting && !mConnected)
+            stateText = "Matched";
+        else if (!mConnected)
+            stateText = "Connecting";
+        else
+            stateText = "Connected";
+
+        field("State", stateText);
 
         field("UUID", this.info.uuid);
 
@@ -398,7 +495,19 @@ function Client(name)
             else
             {
                 field("Session ID", mSessionID);
-                button("Reject match", delegate(this, this.RejectMatch));
+                if (!mConnected)
+                {
+                    button("Reject match", delegate(this, this.RejectMatch));
+
+                    if (!mConnecting)
+                    {
+                        button("Connect", delegate(this, this.Connect));
+                    }
+                    else
+                    {
+                        button("Cancel Connect", delegate(this, this.CancelConnect));
+                    }
+                }
             }
         }
     }

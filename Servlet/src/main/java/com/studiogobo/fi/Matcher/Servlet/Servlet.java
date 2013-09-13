@@ -69,7 +69,7 @@ public class Servlet
         return Response.created(URI.create("" + id)).entity(record).build();
     }
 
-    void updateClient(ClientRecord client, JSONObject data) {
+    void updateClient(ClientRecord client, JSONObject data) throws JSONException {
 
         // TODO: lock
 
@@ -77,6 +77,7 @@ public class Servlet
         // here and only apply them when the request is fully parsed
         UUID newUuid = null;
         Vector<Requirement> newRequirements = null;
+        String newConnectionInfo = null;
 
         Iterator it = data.keys();
         while (it.hasNext())
@@ -134,6 +135,10 @@ public class Servlet
                     throw new WebApplicationException(Response.Status.BAD_REQUEST);
                 }
             }
+            else if (key.equals("connectionInfo"))
+            {
+                newConnectionInfo = data.getString(key);
+            }
             else
             {
                 Log("    unknown field: " + key);
@@ -145,6 +150,8 @@ public class Servlet
             client.uuid = newUuid;
         if (newRequirements != null)
             client.requirements = newRequirements;
+        if (newConnectionInfo != null)
+            client.connectionInfo = newConnectionInfo;
 
         // TODO: unlock
     }

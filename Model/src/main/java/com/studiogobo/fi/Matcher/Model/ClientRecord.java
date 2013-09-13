@@ -15,6 +15,8 @@ public class ClientRecord
 
     public List<Requirement> requirements = new Vector<Requirement>();
 
+    public String connectionInfo;
+
     public ClientRecord()
     {
         this(0);
@@ -23,9 +25,5 @@ public class ClientRecord
     public ClientRecord(int _id)
     {
         id = _id;
-        RequireNotUuid requirement = new RequireNotUuid();
-        requirement.uuid = new UUID(0, 0);
-        requirements.add(requirement);
-        requirements.add(requirement);
     }
 }
