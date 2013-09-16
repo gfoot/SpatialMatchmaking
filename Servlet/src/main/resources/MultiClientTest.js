@@ -449,9 +449,19 @@ function Client(name)
 
         function field(label, value)
         {
+            var indent = 0;
+            while (label.substring(0, 4) == "    ")
+            {
+                ++indent;
+                label = label.substring(4);
+            }
             var element = $("#field", "#clientBodyTemplates").clone();
             element.find(".label").text(label);
             element.find(".value").text(value);
+            if (indent > 0)
+            {
+                element.css({"padding-left": indent*20 + "px"});
+            }
             clientBody.append(element);
         }
 
@@ -479,6 +489,19 @@ function Client(name)
         field("State", stateText);
 
         field("UUID", this.info.uuid);
+
+        field("Location", "?");
+        field("Requirements", this.info.requirements.length);
+
+        for (i = 0; i < this.info.requirements.length; i++)
+        {
+            var requirement = this.info.requirements[i];
+            var type = requirement["@type"];
+            var reqString = "";
+            if (type == "requireNotUuid")
+                reqString = requirement["uuid"].substring(0, 8) + "...";
+            field("    " + type, reqString);
+        }
 
         if (mClientID == null)
         {
