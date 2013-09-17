@@ -335,6 +335,17 @@ public class Servlet
         return deleteClient(id);
     }
 
+    @GET
+    @Path("crossdomain.xml")
+    @Produces("application/xml")
+    public String crossDomainXml()
+    {
+        return "<?xml version=\"1.0\"?>\n" +
+                "<cross-domain-policy>\n" +
+                "<allow-access-from domain=\"*\"/>\n" +
+                "</cross-domain-policy>";
+    }
+
     private ServletClientRecord getServletClientRecord(int client_id) {
         ServletClientRecord client = clientData.get(client_id);
 
