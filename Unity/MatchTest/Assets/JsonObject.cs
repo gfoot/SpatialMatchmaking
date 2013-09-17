@@ -26,6 +26,11 @@ namespace Assets
             return (JsonArray)_data[key];
         }
 
+        public double GetNumber(string key)
+        {
+            return (double)_data[key];
+        }
+
         public JsonObject()
         {
         }
@@ -68,6 +73,11 @@ namespace Assets
             return s;
         }
 
+        public byte[] ToByteArray()
+        {
+            return Json.StringToBytes(ToString());
+        }
+
         public static JsonObject Parse(string s)
         {
             var position = 0;
@@ -98,22 +108,7 @@ namespace Assets
                 
                 Json.ConsumeWhitespace(s, ref pos);
 
-                if (s[pos] == '"')
-                {
-                    Set(key, Json.ParseString(s, ref pos));
-                }
-                else if (s[pos] == '{')
-                {
-                    Set(key, Json.ParseObject(s, ref pos));
-                }
-                else if (s[pos] == '[')
-                {
-                    Set(key, Json.ParseArray(s, ref pos));
-                }
-                else
-                {
-                    throw new Json.ParseException("Expected '\"', '{' or '['", s, pos);
-                }
+                Set(key, Json.Parse(s, ref pos));
 
                 Json.ConsumeWhitespace(s, ref pos);
 

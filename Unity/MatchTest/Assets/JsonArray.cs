@@ -34,6 +34,11 @@ namespace Assets
             return (JsonArray)_data[index];
         }
 
+        public double GetNumber(int index)
+        {
+            return (double)_data[index];
+        }
+
         public override string ToString()
         {
             var s = "[ ";

@@ -174,7 +174,7 @@ function Client(name)
     this.GetMatch = function()
     {
         if (mClientID == null)
-        return;
+            return;
 
         var client = this;
         $.ajax({
