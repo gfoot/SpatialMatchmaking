@@ -1,27 +1,33 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 namespace Assets
 {
     public class Flow : MonoBehaviour
     {
-        private System.Guid _uuid;
-        private int _clientId;
-
-        private JsonObject _clientData;
-
         public string BaseUrl = "http://localhost:9998";
+
+        private System.Guid _uuid;
+        private JsonObject _clientData;
         private JsonObject _sessionData;
+        private JsonObject _otherClientData;
+        private bool _connected;
+        private NetworkConnectionError _networkError;
 
         public void Start()
         {
-            StartCoroutine(Run());
-        }
-
-        private IEnumerator Run()
-        {
             _uuid = System.Guid.NewGuid();
-            yield return null;
+
+            int port = 52202;
+            while (true)
+            {
+                var error = Network.InitializeServer(5, port, false);
+                if (error == NetworkConnectionError.NoError)
+                    break;
+
+                ++port;
+            }
         }
 
         private static void GuiField<T>(string label, T value)
@@ -66,13 +72,44 @@ namespace Assets
                     {
                         GuiField("Client ID", _clientData.GetNumber("id"));
 
-                        if (_sessionData == null)
-                        {
-                            
-                        }
-                        else
+                        if (_sessionData != null)
                         {
                             GuiField("Session ID", _sessionData.GetNumber("id"));
+
+                            if ((int)(_sessionData.GetArray("clients").GetNumber(0) - _clientData.GetNumber("id") + 0.5) == 0)
+                            {
+                                GuiField("My role", "Host");
+                                if (_otherClientData != null)
+                                {
+                                    if (!_connected)
+                                    {
+                                        GuiField("Listen for", _otherClientData.GetString("uuid"));
+                                    }
+                                    else
+                                    {
+                                        GuiField("Connected to", _otherClientData.GetString("uuid"));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                GuiField("My role", "Client");
+                                if (_otherClientData != null)
+                                {
+                                    if (!_connected)
+                                    {
+                                        GuiField("Connect to", _otherClientData.GetString("uuid"));
+                                        GuiField("at address", _otherClientData.GetString("connectionInfo"));
+                                    }
+                                    else
+                                    {
+                                        GuiField("Connected to", _otherClientData.GetString("uuid"));
+                                    }
+                                }
+                            }
+
+                            if (_networkError != NetworkConnectionError.NoError)
+                                GuiField("Network error", _networkError);
                         }
                     }
                 }
@@ -80,7 +117,7 @@ namespace Assets
             }
             GUILayout.EndArea();
 
-            if (GUI.Button(new Rect(10, 10, 200, 20), "JsonTest"))
+            if (GUI.Button(new Rect(10, 10, 100, 20), "JsonTest"))
                 JsonTest();
         }
 
@@ -88,6 +125,7 @@ namespace Assets
         {
             var postData = new JsonObject();
             postData.Set("uuid", _uuid.ToString());
+            postData.Set("connectionInfo", Network.player.ipAddress + ":" + Network.player.port);
 
             var headers = new Hashtable();
             headers["Content-Type"] = "application/json";
@@ -144,10 +182,63 @@ namespace Assets
             if (www.error == null)
             {
                 _sessionData = new JsonObject(www.text);
+                var clients = _sessionData.GetArray("clients");
+                var otherClient = (int)(clients.GetNumber(0) + clients.GetNumber(1) - _clientData.GetNumber("id") + 0.5);
+                StartCoroutine(GetOtherClientInfo(otherClient));
             }
             else
             {
                 Debug.LogError("WWW error: " + www.error);
+            }
+        }
+
+        private IEnumerator GetOtherClientInfo(int clientId)
+        {
+            var www = new WWW(BaseUrl + string.Format("/clients/{0}", clientId));
+            yield return www;
+
+            if (www.error == null)
+            {
+                _otherClientData = new JsonObject(www.text);
+                StartCoroutine(MakeConnection());
+            }
+            else
+            {
+                Debug.LogError("WWW error: " + www.error);
+            }
+        }
+
+        private IEnumerator MakeConnection()
+        {
+            var isHost = (int)(_sessionData.GetArray("clients").GetNumber(0) - _clientData.GetNumber("id") + 0.5) == 0;
+            while (true)
+            {
+                if (isHost)
+                {
+                    foreach (var connection in Network.connections)
+                    {
+                        Debug.Log(connection.ipAddress);
+                        
+                        // check it's all OK?
+
+                        _connected = true;
+                        yield break;
+                    }
+                }
+                else
+                {
+                    var addressAndPort = _otherClientData.GetString("connectionInfo").Split(':');
+                    var address = addressAndPort[0];
+                    var port = int.Parse(addressAndPort[1]);
+                    _networkError = Network.Connect(address, port);
+                    
+                    // check it's all OK?
+                    
+                    _connected = true;
+                    yield break;
+                }
+
+                yield return null;
             }
         }
 
