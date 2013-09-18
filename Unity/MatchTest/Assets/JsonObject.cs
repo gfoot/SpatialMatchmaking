@@ -31,6 +31,11 @@ namespace Assets
             return (double)_data[key];
         }
 
+        public int GetInteger(string key)
+        {
+            return (int)((double)_data[key] + 0.5);
+        }
+
         public JsonObject()
         {
         }

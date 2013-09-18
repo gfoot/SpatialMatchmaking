@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Assets
 {
-    public class Flow : MonoBehaviour
+    public class Flow2 : MonoBehaviour
     {
         public string BaseUrl = "http://localhost:9998";
 
@@ -54,7 +54,7 @@ namespace Assets
 
         public void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(Screen.width * 0.1f, Screen.height * 0.1f, Screen.width * 0.8f, Screen.height * 0.8f));
+            GUILayout.BeginArea(new Rect(Screen.width*0.1f, Screen.height*0.1f, Screen.width*0.8f, Screen.height*0.8f));
             {
                 GUILayout.BeginVertical();
                 {
@@ -69,7 +69,7 @@ namespace Assets
                     }
                     else
                     {
-                        GuiField("Client ID", _clientData.GetNumber("id"));
+                        GuiField("Client ID", _clientData.GetInteger("id"));
 
                         if (_sessionData != null)
                         {
@@ -133,12 +133,6 @@ namespace Assets
                 Debug.LogError("WWW error: " + www.error);
                 yield break;
             }
-            
-            //foreach (var key in www.responseHeaders.Keys)
-            //{
-            //    Debug.Log(key + ": " + www.responseHeaders[key]);
-            //}
-            //Debug.Log(www.text);
 
             if (www.responseHeaders["CONTENT-TYPE"] != "application/json")
             {
@@ -148,77 +142,62 @@ namespace Assets
 
             _clientData = new JsonObject(www.text);
 
-            StartCoroutine(GetMatch());
-        }
-
-        private IEnumerator GetMatch()
-        {
-            if (_clientData == null)
-                yield break;
-
-            var www = new WWW(BaseUrl + string.Format("/matches?client={0}", _clientData.GetInteger("id")));
-            yield return www;
-
-            if (www.error == null)
-            {
-                var sessionId = new JsonObject(www.text).GetInteger("id");
-                StartCoroutine(GetMatchInfo(sessionId));
-            }
-            else
-            {
-                Debug.LogError("WWW error: " + www.error);
-            }
-        }
-
-        private IEnumerator GetMatchInfo(int sessionId)
-        {
-            var www = new WWW(BaseUrl + string.Format("/matches/{0}", sessionId));
-            yield return www;
-
-            if (www.error == null)
-            {
-                _sessionData = new JsonObject(www.text);
-                var clients = _sessionData.GetArray("clients");
-                var otherClient = clients.GetInteger(0) + clients.GetInteger(1) - _clientData.GetInteger("id");
-                StartCoroutine(GetOtherClientInfo(otherClient));
-            }
-            else
-            {
-                Debug.LogError("WWW error: " + www.error);
-            }
-        }
-
-        private IEnumerator GetOtherClientInfo(int clientId)
-        {
-            var www = new WWW(BaseUrl + string.Format("/clients/{0}", clientId));
-            yield return www;
-
-            if (www.error == null)
-            {
-                _otherClientData = new JsonObject(www.text);
-                StartCoroutine(MakeConnection());
-            }
-            else
-            {
-                Debug.LogError("WWW error: " + www.error);
-            }
-        }
-
-        private IEnumerator MakeConnection()
-        {
-            var isHost = (_sessionData.GetArray("clients").GetInteger(0) - _clientData.GetInteger("id")) == 0;
             while (true)
+            {
+                www = new WWW(BaseUrl + string.Format("/matches?client={0}", _clientData.GetInteger("id")));
+                yield return www;
+
+                if (www.error == null)
+                    break;
+
+                if (www.error.StartsWith("404"))
+                {
+                    Debug.Log("No matches yet");
+                    continue;
+                }
+
+                Debug.LogError("WWW error: " + www.error);
+                yield break;
+            }
+
+            var sessionId = new JsonObject(www.text).GetInteger("id");
+
+            www = new WWW(BaseUrl + string.Format("/matches/{0}", sessionId));
+            yield return www;
+
+            if (www.error != null)
+            {
+                Debug.LogError("WWW error: " + www.error);
+                yield break;
+            }
+
+            _sessionData = new JsonObject(www.text);
+            var clients = _sessionData.GetArray("clients");
+            var otherClient = clients.GetInteger(0) + clients.GetInteger(1) - _clientData.GetInteger("id");
+
+            www = new WWW(BaseUrl + string.Format("/clients/{0}", otherClient));
+            yield return www;
+
+            if (www.error != null)
+            {
+                Debug.LogError("WWW error: " + www.error);
+                yield break;
+            }
+
+            _otherClientData = new JsonObject(www.text);
+
+            var isHost = (_sessionData.GetArray("clients").GetInteger(0) - _clientData.GetInteger("id")) == 0;
+            while (!_connected)
             {
                 if (isHost)
                 {
                     foreach (var connection in Network.connections)
                     {
                         Debug.Log(connection.ipAddress);
-                        
+
                         // check it's all OK?
 
                         _connected = true;
-                        yield break;
                     }
                 }
                 else
@@ -227,15 +206,16 @@ namespace Assets
                     var address = addressAndPort[0];
                     var port = int.Parse(addressAndPort[1]);
                     _networkError = Network.Connect(address, port);
-                    
+
                     // check it's all OK?
-                    
+
                     _connected = true;
-                    yield break;
                 }
 
                 yield return null;
             }
+
+            // connected...
         }
     }
 }

@@ -39,6 +39,11 @@ namespace Assets
             return (double)_data[index];
         }
 
+        public int GetInteger(int index)
+        {
+            return (int)((double)_data[index] + 0.5);
+        }
+
         public override string ToString()
         {
             var s = "[ ";
