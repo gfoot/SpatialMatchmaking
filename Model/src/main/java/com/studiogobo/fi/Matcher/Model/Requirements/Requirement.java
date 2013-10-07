@@ -6,7 +6,8 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 @JsonTypeInfo(use= JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(RequireNotUuid.class)
+        @JsonSubTypes.Type(RequireNotUuid.class),
+        @JsonSubTypes.Type(RequireAttribute.class)
 })
 public abstract class Requirement
 {

@@ -117,11 +117,28 @@ namespace Assets
             GUILayout.EndArea();
         }
 
+        private JsonObject RequireAttribute(string attribute, params string[] values)
+        {
+            var valuesArray = new JsonArray();
+            foreach (var value in values)
+                valuesArray.Add(value);
+         
+            var result = new JsonObject();
+            result.Set("@type", "requireAttribute");
+            result.Set("attribute", attribute);
+            result.Set("values", valuesArray);
+            return result;
+        }
+
         private IEnumerator Register()
         {
+            var requirements = new JsonArray();
+            requirements.Add(RequireAttribute("gameName", "com.studiogobo.fi.Matcher.Unity.MatchTest"));
+
             var postData = new JsonObject();
             postData.Set("uuid", _uuid.ToString());
             postData.Set("connectionInfo", Network.player.ipAddress + ":" + Network.player.port);
+            postData.Set("requirements", requirements);
 
             var headers = new Hashtable();
             headers["Content-Type"] = "application/json";
