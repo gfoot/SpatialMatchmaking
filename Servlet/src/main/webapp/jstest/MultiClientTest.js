@@ -1,7 +1,7 @@
 
 var count = 0;
 
-var baseUrl = "http://localhost:9998";
+var baseUrl = "..";
 $.support.cors = true;
 
 var clients = {};
