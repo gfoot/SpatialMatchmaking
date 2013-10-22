@@ -2,9 +2,14 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class UnityNetworkInterface : INetworkInterface
+    public class UnityNetworkInterface : MonoBehaviour, INetworkInterface
     {
-        public UnityNetworkInterface()
+        public bool Connected { get; private set; }
+        public bool Ready { get; private set; }
+        public bool Connecting { get; private set; }
+        public string NetworkError { get; private set; }
+
+        public void Start()
         {
             int port = 52202;
             while (true)
@@ -19,24 +24,18 @@ namespace Assets
 
         public string GetConnectionInfo()
         {
+            if (!Ready)
+                Debug.LogError("Don't call GetConnectionInfo until Ready is true");
+
             return Network.player.ipAddress + ":" + Network.player.port;
         }
 
-        public bool PollConnected()
+        public string Listen()
         {
-            foreach (var connection in Network.connections)
-            {
-                Debug.Log(connection.ipAddress);
-
-                // check it's the right person/people?
-
-                return true;
-            }
-
-            return false;
+            return null;
         }
 
-        public string Connect(string connectionInfo)
+        public bool Connect(string connectionInfo)
         {
             var addressAndPort = connectionInfo.Split(':');
             var address = addressAndPort[0];
@@ -44,9 +43,36 @@ namespace Assets
             
             var error = Network.Connect(address, port);
             if (error != NetworkConnectionError.NoError)
-                return error.ToString();
+            {
+                NetworkError = error.ToString();
+                return false;
+            }
+
+            Connecting = true;
             
-            return null;
+            return true;
+        }
+
+        public void OnConnectedToServer()
+        {
+            Connecting = false;
+            Connected = true;
+        }
+
+        public void OnDisconnectedFromServer()
+        {
+            Debug.Log("OnDisconnectedFromServer");
+        }
+
+        public void OnFailedToConnect(NetworkConnectionError error)
+        {
+            NetworkError = error.ToString();
+            Connecting = false;
+        }
+
+        public void OnServerInitialized()
+        {
+            Ready = true;
         }
     }
 }

@@ -2,8 +2,12 @@ namespace Assets
 {
     public interface INetworkInterface
     {
-        bool PollConnected();
+        bool Ready { get; }
+        bool Connecting { get; }
+        bool Connected { get; }
+        string NetworkError { get; }
         string GetConnectionInfo();
-        string Connect(string connectionInfo);
+        string Listen();
+        bool Connect(string connectionInfo);
     }
 }
