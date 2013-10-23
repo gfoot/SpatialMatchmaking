@@ -22,6 +22,11 @@ namespace Assets
             }
         }
 
+        public void OnServerInitialized()
+        {
+            Ready = true;
+        }
+
         public string GetConnectionInfo()
         {
             if (!Ready)
@@ -59,20 +64,10 @@ namespace Assets
             Connected = true;
         }
 
-        public void OnDisconnectedFromServer()
-        {
-            Debug.Log("OnDisconnectedFromServer");
-        }
-
         public void OnFailedToConnect(NetworkConnectionError error)
         {
             NetworkError = error.ToString();
             Connecting = false;
-        }
-
-        public void OnServerInitialized()
-        {
-            Ready = true;
         }
     }
 }

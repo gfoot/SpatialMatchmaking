@@ -14,10 +14,6 @@ namespace Assets
         public string NetworkError { get; private set; }
         public string Status { get; private set; }
 
-        private JsonObject ClientData { get; set; }
-        private JsonObject SessionData { get; set; }
-        private JsonObject OtherClientData { get; set; }
-
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
             var valuesArray = new JsonArray();
@@ -74,7 +70,7 @@ namespace Assets
                 yield break;
             }
 
-            ClientData = new JsonObject(www.text);
+            var clientData = new JsonObject(www.text);
 
             // "failures" counts the number of times we hit error cases from the server, so we can retry on errors but still give up if it's really broken.
             // It doesn't necessarily increase each time through the loop.
@@ -85,7 +81,7 @@ namespace Assets
                 Status = "waiting for match";
                 while (true)
                 {
-                    www = new WWW(BaseUrl + string.Format("/matches?client={0}", ClientData.GetInteger("id")));
+                    www = new WWW(BaseUrl + string.Format("/matches?client={0}", clientData.GetInteger("id")));
                     yield return www;
 
                     if (www.error == null)
@@ -124,9 +120,8 @@ namespace Assets
                     continue;
                 }
 
-                SessionData = new JsonObject(www.text);
-                var clients = SessionData.GetArray("clients");
-                var otherClient = clients.GetInteger(0) + clients.GetInteger(1) - ClientData.GetInteger("id");
+                var clients = new JsonObject(www.text).GetArray("clients");
+                var otherClient = clients.GetInteger(0) + clients.GetInteger(1) - clientData.GetInteger("id");
 
                 Status = "fetching other client data";
 
@@ -142,9 +137,9 @@ namespace Assets
                     continue;
                 }
 
-                OtherClientData = new JsonObject(www.text);
+                var otherClientData = new JsonObject(www.text);
 
-                var isHost = clients.GetInteger(1) == ClientData.GetInteger("id");
+                var isHost = clients.GetInteger(1) == clientData.GetInteger("id");
                 if (isHost)
                 {
                     Status = "hosting - waiting for other client to join";
@@ -160,7 +155,7 @@ namespace Assets
                     var attempts = 0;
                     while (!Connected)
                     {
-                        if (NetworkInterface.Connect(OtherClientData.GetString("connectionInfo")))
+                        if (NetworkInterface.Connect(otherClientData.GetString("connectionInfo")))
                         {
                             while (NetworkInterface.Connecting)
                                 yield return null;
@@ -169,7 +164,7 @@ namespace Assets
                         if (NetworkInterface.Connected) continue;
 
                         NetworkError = NetworkInterface.NetworkError;
-                        Status = "error connecting to host - trying again in a while";
+                        Status = "error connecting to host - trying again";
                         Debug.LogError(string.Format("Network connection error: {0}", NetworkInterface.NetworkError));
                         ++attempts;
                         if (attempts >= 3) break;
@@ -179,12 +174,12 @@ namespace Assets
 
                 if (!Connected)
                 {
-                    Status = "giving up connecting to host, will find another match in a while";
+                    Status = "giving up connecting to host, will find another match";
 
                     // We failed to connect to the peer, so explicitly ask the server not to match us with the same peer again
-                    requirements.Add(RequireNotUuid(OtherClientData.GetString("uuid")));
+                    requirements.Add(RequireNotUuid(otherClientData.GetString("uuid")));
                     postData.Set("requirements", requirements);
-                    www = new WWW(BaseUrl + string.Format("/clients/{0}/update", ClientData.GetInteger("id")), postData.ToByteArray(), headers);
+                    www = new WWW(BaseUrl + string.Format("/clients/{0}/update", clientData.GetInteger("id")), postData.ToByteArray(), headers);
                     yield return www;
 
                     if (www.error != null)
@@ -205,7 +200,7 @@ namespace Assets
             // either connected or given up connecting
 
             // tidy up
-            yield return new WWW(BaseUrl + string.Format("/clients/{0}/delete", ClientData.GetInteger("id")));
+            yield return new WWW(BaseUrl + string.Format("/clients/{0}/delete", clientData.GetInteger("id")));
         }
     }
 }
