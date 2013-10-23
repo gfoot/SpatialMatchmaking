@@ -40,6 +40,11 @@ namespace Assets
             return null;
         }
 
+        public void OnPlayerConnected(NetworkPlayer player)
+        {
+            Connected = true;
+        }
+
         public bool Connect(string connectionInfo)
         {
             var addressAndPort = connectionInfo.Split(':');
@@ -60,12 +65,14 @@ namespace Assets
 
         public void OnConnectedToServer()
         {
+            Debug.Log("OnConnectedToServer");
             Connecting = false;
             Connected = true;
         }
 
         public void OnFailedToConnect(NetworkConnectionError error)
         {
+            Debug.Log("OnFailedToConnect");
             NetworkError = error.ToString();
             Connecting = false;
         }

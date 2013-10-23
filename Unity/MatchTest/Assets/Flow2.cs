@@ -16,7 +16,7 @@ namespace Assets
         {
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(label, GUILayout.Width(200));
+                GUILayout.Label(label, GUILayout.Width(100));
                 GUILayout.Label(value.ToString(), GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
@@ -49,6 +49,8 @@ namespace Assets
                             _connector.NetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
                             _connector.BaseUrl = BaseUrl;
                             _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
+                            //_connector.OnConnected += ...;
+                            //_connector.OnConnectFailed += ...;
                         }
                     }
                     else

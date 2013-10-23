@@ -9,6 +9,8 @@ namespace Assets
         public INetworkInterface NetworkInterface;
         public string BaseUrl;
         public string GameName;
+        public event Action OnConnected;
+        public event Action OnConnectFailed;
 
         public bool Connected { get; private set; }
         public string NetworkError { get; private set; }
@@ -145,15 +147,12 @@ namespace Assets
                     Status = "hosting - waiting for other client to join";
                     while (!NetworkInterface.Connected)
                         yield return null;
-
-                    Status = "hosting - other client present";
-                    Connected = true;
                 }
                 else
                 {
                     Status = "connecting to host";
                     var attempts = 0;
-                    while (!Connected)
+                    while (!NetworkInterface.Connected)
                     {
                         if (NetworkInterface.Connect(otherClientData.GetString("connectionInfo")))
                         {
@@ -172,7 +171,7 @@ namespace Assets
                     }
                 }
 
-                if (!Connected)
+                if (!NetworkInterface.Connected)
                 {
                     Status = "giving up connecting to host, will find another match";
 
@@ -194,6 +193,9 @@ namespace Assets
                 }
 
                 // connected
+                Status = "Connected";
+                Connected = true;
+
                 break;
             }
 
@@ -201,6 +203,11 @@ namespace Assets
 
             // tidy up
             yield return new WWW(BaseUrl + string.Format("/clients/{0}/delete", clientData.GetInteger("id")));
+
+            if (Connected && OnConnected != null)
+                OnConnected();
+            else if (!Connected && OnConnectFailed != null)
+                OnConnectFailed();
         }
     }
 }
