@@ -8,8 +8,24 @@ namespace Assets
 
         private Connector _connector;
 
+        private int _connectivityBits;
+
         public void Start()
         {
+            _connectivityBits = 0;
+            for (int i = 0; i < 3; ++i)
+            {
+                if (Random.value > 0.5f)
+                {
+                    _connectivityBits |= 1 << i;
+                }
+            }
+
+            Camera.main.backgroundColor = new Color(
+                (_connectivityBits & 1) > 0 ? 0.5f : 0.0f,
+                (_connectivityBits & 2) > 0 ? 0.5f : 0.0f,
+                (_connectivityBits & 4) > 0 ? 0.5f : 0.0f
+            );
         }
 
         private static void GuiField<T>(string label, T value)
@@ -51,6 +67,8 @@ namespace Assets
                             _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
                             //_connector.OnConnected += ...;
                             //_connector.OnConnectFailed += ...;
+
+                            _connector.DebugConnectivityBits = _connectivityBits;
                         }
                     }
                     else

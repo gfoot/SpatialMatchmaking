@@ -16,6 +16,8 @@ namespace Assets
         public string NetworkError { get; private set; }
         public string Status { get; private set; }
 
+        public int DebugConnectivityBits;
+
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
             var valuesArray = new JsonArray();
@@ -50,7 +52,7 @@ namespace Assets
 
             var postData = new JsonObject();
             postData.Set("uuid", Guid.NewGuid().ToString());
-            postData.Set("connectionInfo", NetworkInterface.GetConnectionInfo());
+            postData.Set("connectionInfo", NetworkInterface.GetConnectionInfo() + string.Format("!{0}", DebugConnectivityBits));
             postData.Set("requirements", requirements);
 
             var headers = new Hashtable();
@@ -154,7 +156,14 @@ namespace Assets
                     var attempts = 0;
                     while (!NetworkInterface.Connected)
                     {
-                        if (NetworkInterface.Connect(otherClientData.GetString("connectionInfo")))
+                        var splitConnectionInfo = otherClientData.GetString("connectionInfo").Split('!');
+                        var connectionInfo = splitConnectionInfo[0];
+
+                        var connectivityBits = int.Parse(splitConnectionInfo[1]);
+                        if ((connectivityBits & DebugConnectivityBits) == 0)
+                            connectionInfo = NetworkInterface.GetBadConnectionInfo();
+
+                        if (NetworkInterface.Connect(connectionInfo))
                         {
                             while (NetworkInterface.Connecting)
                                 yield return null;

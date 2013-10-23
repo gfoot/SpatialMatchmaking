@@ -7,6 +7,7 @@ namespace Assets
         bool Connected { get; }
         string NetworkError { get; }
         string GetConnectionInfo();
+        string GetBadConnectionInfo();
         string Listen();
         bool Connect(string connectionInfo);
     }

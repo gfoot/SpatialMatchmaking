@@ -35,6 +35,11 @@ namespace Assets
             return Network.player.ipAddress + ":" + Network.player.port;
         }
 
+        public string GetBadConnectionInfo()
+        {
+            return "127.0.0.1:52201";
+        }
+
         public string Listen()
         {
             return null;
