@@ -231,7 +231,7 @@ namespace Assets
             // either connected or given up connecting
 
             // tidy up
-            yield return new WWW(BaseUrl + string.Format("/clients/{0}/delete", clientData.GetInteger("id")));
+            yield return new WWW(BaseUrl + string.Format("/clients/{0}/delete", clientData.GetInteger("id")), new JsonObject().ToByteArray());
 
             if (Connected && OnConnected != null)
                 OnConnected();
