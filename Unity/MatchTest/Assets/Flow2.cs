@@ -65,7 +65,7 @@ namespace Assets
                             _connector.NetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
                             _connector.BaseUrl = BaseUrl;
                             _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
-                            //_connector.OnConnected += ...;
+                            _connector.OnConnected += Connected;
                             //_connector.OnConnectFailed += ...;
 
                             _connector.DebugConnectivityBits = _connectivityBits;
@@ -82,6 +82,25 @@ namespace Assets
                 GUILayout.EndVertical();
             }
             GUILayout.EndArea();
+
+            if (_key != null)
+                GUI.Label(new Rect(0, Screen.height - 40, Screen.width, Screen.height - 20), _key);
+        }
+
+        private string _key;
+        private void Connected()
+        {
+            if (Network.isServer)
+            {
+                _key = ((int)(10000*Random.value)).ToString();
+                networkView.RPC("RpcSetKey", RPCMode.Others, _key);
+            }
+        }
+
+        [RPC]
+        public void RpcSetKey(string key, NetworkMessageInfo info)
+        {
+            _key = key;
         }
     }
 }
