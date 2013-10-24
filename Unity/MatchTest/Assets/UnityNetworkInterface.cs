@@ -4,6 +4,13 @@ namespace Assets
 {
     public class UnityNetworkInterface : MonoBehaviour, INetworkInterface
     {
+        private string _expectedClientUuid;
+        private string _localUuid;
+
+        public int PortMin = 52202;
+        public int PortMax = 52299;
+        private string _connectToGuid;
+
         public bool Connected { get; private set; }
         public bool Ready { get; private set; }
         public bool Connecting { get; private set; }
@@ -11,52 +18,61 @@ namespace Assets
 
         public void Start()
         {
-            int port = 52202;
-            while (true)
-            {
-                var error = Network.InitializeServer(5, port, false);
-                if (error == NetworkConnectionError.NoError)
-                    break;
-
-                ++port;
-            }
-        }
-
-        public void OnServerInitialized()
-        {
             Ready = true;
         }
 
         public string GetConnectionInfo()
         {
-            if (!Ready)
-                Debug.LogError("Don't call GetConnectionInfo until Ready is true");
-
-            return Network.player.ipAddress + ":" + Network.player.port;
+            return Network.player.guid;
         }
 
         public string GetBadConnectionInfo()
         {
-            return "127.0.0.1:52201";
+            return "1234567890";
         }
 
-        public string Listen()
+        public string Listen(string expectedClientUuid)
         {
-            return null;
+            _expectedClientUuid = expectedClientUuid;
+            _connectToGuid = null;
+
+            var error = NetworkConnectionError.NoError;
+            for (int i = 0; i < 10; ++i)
+            {
+                error = Network.InitializeServer(5, (int)(PortMin + (PortMax + 1 - PortMin) * Random.value), true);
+                if (error == NetworkConnectionError.NoError)
+                    return null;
+            }
+
+            return error.ToString();
         }
 
-        public void OnPlayerConnected(NetworkPlayer player)
+        [RPC]
+        public void HelloFrom(string clientUuid, NetworkMessageInfo info)
         {
+            if (clientUuid != _expectedClientUuid)
+            {
+                Network.CloseConnection(info.sender, true);
+                return;
+            }
             Connected = true;
         }
 
-        public bool Connect(string connectionInfo)
+        public void StopListening()
         {
-            var addressAndPort = connectionInfo.Split(':');
-            var address = addressAndPort[0];
-            var port = int.Parse(addressAndPort[1]);
+            Network.Disconnect();
+        }
+
+        public bool Connect(string connectionInfo, string localUuid)
+        {
+            _localUuid = localUuid;
+            _connectToGuid = connectionInfo;
+
+            //var addressAndPort = connectionInfo.Split(':');
+            //var address = addressAndPort[0];
+            //var port = int.Parse(addressAndPort[1]);
             
-            var error = Network.Connect(address, port);
+            var error = Network.Connect(connectionInfo);
             if (error != NetworkConnectionError.NoError)
             {
                 NetworkError = error.ToString();
@@ -71,6 +87,7 @@ namespace Assets
         public void OnConnectedToServer()
         {
             Debug.Log("OnConnectedToServer");
+            networkView.RPC("HelloFrom", RPCMode.Server, _localUuid);
             Connecting = false;
             Connected = true;
         }
@@ -80,6 +97,13 @@ namespace Assets
             Debug.Log("OnFailedToConnect");
             NetworkError = error.ToString();
             Connecting = false;
+        }
+
+        public void OnGUI()
+        {
+            GUILayout.Label(Network.player.guid);
+            if (_connectToGuid != null)
+                GUILayout.Label(_connectToGuid);
         }
     }
 }

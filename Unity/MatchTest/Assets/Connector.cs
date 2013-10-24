@@ -18,6 +18,8 @@ namespace Assets
 
         public int DebugConnectivityBits;
 
+        public float ConnectTimeout = 10;
+
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
             var valuesArray = new JsonArray();
@@ -82,6 +84,7 @@ namespace Assets
 
             while (failures < 10)
             {
+                NetworkError = null;
                 Status = "waiting for match";
                 while (true)
                 {
@@ -147,8 +150,23 @@ namespace Assets
                 if (isHost)
                 {
                     Status = "hosting - waiting for other client to join";
+                    NetworkError = null;
+
+                    var startTime = Time.realtimeSinceStartup;
+
+                    NetworkInterface.Listen(otherClientData.GetString("uuid"));
+
                     while (!NetworkInterface.Connected)
+                    {
+                        if (Time.realtimeSinceStartup - startTime > ConnectTimeout)
+                        {
+                            NetworkInterface.StopListening();
+                            Status = "Timeout waiting for client to connect";
+                            yield return new WaitForSeconds(1);
+                            break;
+                        }
                         yield return null;
+                    }
                 }
                 else
                 {
@@ -163,13 +181,15 @@ namespace Assets
                         if ((connectivityBits & DebugConnectivityBits) == 0)
                             connectionInfo = NetworkInterface.GetBadConnectionInfo();
 
-                        if (NetworkInterface.Connect(connectionInfo))
+                        NetworkError = null;
+                        if (NetworkInterface.Connect(connectionInfo, clientData.GetString("uuid")))
                         {
                             while (NetworkInterface.Connecting)
                                 yield return null;
                         }
 
-                        if (NetworkInterface.Connected) continue;
+                        if (NetworkInterface.Connected)
+                            continue;
 
                         NetworkError = NetworkInterface.NetworkError;
                         Status = "error connecting to host - trying again";
@@ -182,7 +202,7 @@ namespace Assets
 
                 if (!NetworkInterface.Connected)
                 {
-                    Status = "giving up connecting to host, will find another match";
+                    Status = "giving up connecting, will find another match";
 
                     // We failed to connect to the peer, so explicitly ask the server not to match us with the same peer again
                     requirements.Add(RequireNotUuid(otherClientData.GetString("uuid")));

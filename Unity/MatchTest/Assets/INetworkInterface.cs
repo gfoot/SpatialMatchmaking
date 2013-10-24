@@ -8,7 +8,8 @@ namespace Assets
         string NetworkError { get; }
         string GetConnectionInfo();
         string GetBadConnectionInfo();
-        string Listen();
-        bool Connect(string connectionInfo);
+        string Listen(string expectedClientUuid);
+        void StopListening();
+        bool Connect(string connectionInfo, string localUuid);
     }
 }
