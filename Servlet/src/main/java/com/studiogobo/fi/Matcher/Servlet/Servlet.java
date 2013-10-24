@@ -241,7 +241,7 @@ public class Servlet
     @GET
     @Path("matches")
     @Produces("application/json")
-    public Response seekMatch(@QueryParam("client") int client_id, @Context javax.ws.rs.core.UriInfo uriInfo)
+    public Response seekMatch(@QueryParam("client") final int client_id, @Context javax.ws.rs.core.UriInfo uriInfo)
             throws InterruptedException
     {
         Log("    path " + uriInfo.getAbsolutePath());
@@ -251,10 +251,23 @@ public class Servlet
 
         if (client.waitUntilMatched.getCount() > 0)
         {
+            if (!client.active)
+            {
+                client.active = true;
+                jobQueue.Enqueue(new Runnable() {
+                    public void run()
+                    {
+                        matchmaker.UpdateClient(client_id);
+                    }
+                });
+            }
+
             Log("    waiting for match...");
         }
 
         boolean awaitResult = client.waitUntilMatched.await(30, TimeUnit.SECONDS);
+
+        client.active = false;
 
         if (!awaitResult)
         {

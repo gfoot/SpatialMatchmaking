@@ -42,6 +42,10 @@ public class Matchmaker
             if (record.match_id != 0)
                 continue;
 
+            // Ignore inactive clients
+            if (!record.active)
+                continue;
+
             // Ignore the client we're trying to match
             if (record.clientRecord.id == id)
                 continue;

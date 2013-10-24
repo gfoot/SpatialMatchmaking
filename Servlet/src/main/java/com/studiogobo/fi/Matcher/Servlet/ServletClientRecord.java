@@ -9,6 +9,7 @@ public class ServletClientRecord
     public ClientRecord clientRecord;
     public int match_id = 0;
     public boolean deleted = false;
+    public boolean active = false;
     public CountDownLatch waitUntilMatched = new CountDownLatch(1);
 
     public ServletClientRecord(ClientRecord _clientRecord)
