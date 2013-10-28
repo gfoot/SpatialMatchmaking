@@ -31,13 +31,6 @@ namespace Assets
         string GetConnectionInfo();
         
         /// <summary>
-        /// For debugging purposes, return a 'bad' connection info string, which can be passed into 'StartConnecting' 
-        /// but will not result in making a successful connection
-        /// </summary>
-        /// <returns>A connection-info string</returns>
-        string GetBadConnectionInfo();
-
-        /// <summary>
         /// Be a host - start listening for clients connecting, expecting a specific client to connect.  This method
         /// must not block, but should arrange to keep listening in the background until the right client does connect.
         /// 
@@ -67,5 +60,10 @@ namespace Assets
         /// <param name="localUuid">The UUID string for the local peer, which you must send to the host when connecting</param>
         /// <returns>'true' if the client is now attempting to connect</returns>
         bool StartConnecting(string connectionInfo, string localUuid);
+
+        /// <summary>
+        /// Stop trying to connect to a host.
+        /// </summary>
+        void StopConnecting();
     }
 }

@@ -68,22 +68,20 @@ namespace Assets
         public int ConnectToHostFailRetryDelay = 1;
 
         /// <summary>
-        /// Amount of time a host will wait for a client to connect before giving up and requesting a new match
+        /// Duration a host will wait for a client to connect before giving up and requesting a new match
         /// </summary>
-        public float HostWaitForClientTimeout = 10;
+        public float HostWaitForClientTimeout = 20;
 
         /// <summary>
-        /// For debug use only - simulate NAT negotiation errors.  Peers can only communicate if they share some bits in common.
+        /// Duration a client will wait while attempting to connect to a host before abandoning the connection
         /// </summary>
-        public int DebugConnectivityBits = 1;
+        public int ConnectToHostTimeout = 9;
 
 
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
-            var valuesArray = new JsonArray();
-            foreach (var value in values)
-                valuesArray.Add(value);
-         
+            var valuesArray = new JsonArray(values);
+
             var result = new JsonObject();
             result.Set("@type", "requireAttribute");
             result.Set("attribute", attribute);
@@ -108,7 +106,7 @@ namespace Assets
 
             var postData = new JsonObject();
             postData.Set("uuid", Guid.NewGuid().ToString());
-            postData.Set("connectionInfo", NetworkInterface.GetConnectionInfo() + string.Format("!{0}", DebugConnectivityBits));
+            postData.Set("connectionInfo", NetworkInterface.GetConnectionInfo());
             postData.Set("requirements", requirements);
 
             var headers = new Hashtable();
@@ -208,46 +206,67 @@ namespace Assets
 
                     var startTime = Time.realtimeSinceStartup;
 
-                    NetworkInterface.StartListening(otherClientData.GetString("uuid"));
-
-                    while (!NetworkInterface.Connected)
+                    if (NetworkInterface.StartListening(otherClientData.GetString("uuid")))
                     {
-                        if (Time.realtimeSinceStartup - startTime > HostWaitForClientTimeout)
+                        while (!NetworkInterface.Connected)
                         {
-                            NetworkInterface.StopListening();
-                            Status = "Timeout waiting for client to connect";
-                            yield return new WaitForSeconds(1);
-                            break;
+                            if (Time.realtimeSinceStartup - startTime > HostWaitForClientTimeout)
+                            {
+                                NetworkInterface.StopListening();
+                                Status = "Timeout waiting for client to connect";
+                                yield return new WaitForSeconds(1);
+                                break;
+                            }
+                            yield return null;
                         }
-                        yield return null;
+                    }
+                    else
+                    {
+                        Status = "failed to initialize as host";
+                        NetworkError = NetworkInterface.NetworkError;
+                        yield return new WaitForSeconds(1);
                     }
                 }
                 else
                 {
-                    Status = "connecting to host";
                     var attempts = 0;
                     while (!NetworkInterface.Connected)
                     {
-                        var splitConnectionInfo = otherClientData.GetString("connectionInfo").Split('!');
-                        var connectionInfo = splitConnectionInfo[0];
-
-                        var connectivityBits = int.Parse(splitConnectionInfo[1]);
-                        if ((connectivityBits & DebugConnectivityBits) == 0)
-                            connectionInfo = NetworkInterface.GetBadConnectionInfo();
-
+                        Status = "connecting to host";
                         NetworkError = null;
-                        if (NetworkInterface.StartConnecting(connectionInfo, clientData.GetString("uuid")))
+
+                        var startTime = Time.realtimeSinceStartup;
+
+                        var startConnectingOk = NetworkInterface.StartConnecting(otherClientData.GetString("connectionInfo"), clientData.GetString("uuid"));
+                        var timedOut = false;
+
+                        if (startConnectingOk)
                         {
-                            while (NetworkInterface.Connecting)
+                            while (NetworkInterface.Connecting && !timedOut)
+                            {
+                                timedOut = Time.realtimeSinceStartup - startTime > ConnectToHostTimeout;
                                 yield return null;
+                            }
                         }
 
                         if (NetworkInterface.Connected)
                             continue;
 
-                        NetworkError = NetworkInterface.NetworkError;
-                        Status = "error connecting to host - trying again";
-                        Debug.LogError(string.Format("Network connection error: {0}", NetworkInterface.NetworkError));
+                        if (!startConnectingOk)
+                        {
+                            Status = "error connecting to host - trying again";
+                            NetworkError = NetworkInterface.NetworkError;
+                        }
+                        else if (timedOut)
+                        {
+                            Status = "timeout connecting to host - trying again";
+                        }
+                        else
+                        {
+                            Status = "error connecting to host - trying again";
+                            NetworkError = NetworkInterface.NetworkError;
+                        }
+
                         ++attempts;
                         if (attempts >= 3) break;
                         yield return new WaitForSeconds(ConnectToHostFailRetryDelay);

@@ -25,6 +25,11 @@ namespace Assets
         /// </summary>
         public bool DisplayDebugUI = false;
 
+        /// <summary>
+        /// For debug use only - simulate NAT negotiation errors.  Peers can only communicate if they share some bits in common.
+        /// </summary>
+        public int DebugConnectivityBits = 1;
+
 
         public bool Connected { get; private set; }
         public bool Connecting { get; private set; }
@@ -60,14 +65,27 @@ namespace Assets
         }
 
         [RPC]
-        public void HelloFrom(string clientUuid, NetworkMessageInfo info)
+        public void RpcHelloFrom(string clientUuid, NetworkMessageInfo info)
         {
+            var split = clientUuid.Split('!');
+            
+            clientUuid = split[0];
+            var remoteConnectivityBits = int.Parse(split[1]);
+            
+            if ((remoteConnectivityBits & DebugConnectivityBits) == 0)
+            {
+                Network.CloseConnection(info.sender, false);
+                return;
+            }
+
             if (clientUuid != _expectedClientUuid)
             {
                 Network.CloseConnection(info.sender, true);
                 return;
             }
+
             Connected = true;
+            networkView.RPC("RpcWelcome", info.sender);
         }
 
         public void StopListening()
@@ -92,9 +110,21 @@ namespace Assets
             return true;
         }
 
+        public void StopConnecting()
+        {
+            Network.Disconnect();
+            Connecting = false;
+            Connected = false;
+        }
+
         public void OnConnectedToServer()
         {
-            networkView.RPC("HelloFrom", RPCMode.Server, _localUuid);
+            networkView.RPC("RpcHelloFrom", RPCMode.Server, _localUuid + "!" + DebugConnectivityBits);
+        }
+
+        [RPC]
+        public void RpcWelcome(NetworkMessageInfo info)
+        {
             Connecting = false;
             Connected = true;
         }

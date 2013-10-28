@@ -64,5 +64,16 @@ namespace Assets
 
             return s;
         }
+
+        public JsonArray()
+        {
+        }
+
+        public JsonArray (IEnumerable<string> values)
+            : this()
+        {
+            foreach (var value in values)
+                Add(value);
+        }
     }
 }
