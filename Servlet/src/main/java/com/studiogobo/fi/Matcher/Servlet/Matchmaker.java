@@ -29,6 +29,9 @@ public class Matchmaker
             return;
         }
 
+        if (!primaryClientRecord.active)
+            return;
+
         final int wantedClients = 2;
 
         // Start with a list containing only the client we're trying to match
