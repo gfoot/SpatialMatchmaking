@@ -37,20 +37,14 @@ namespace Assets
         public event Action OnFailure;
 
         /// <summary>
+        /// Called during the connection process to report status changes and errors
+        /// </summary>
+        public event Action<bool, string> OnLogEvent;
+
+        /// <summary>
         /// Indicates whether a connection has been established
         /// </summary>
         public bool Connected { get; private set; }
-
-        /// <summary>
-        /// String representation of the last network error to occur
-        /// TODO: replace with an event so the caller can capture all errors that occur
-        /// </summary>
-        public string NetworkError { get; private set; }
-
-        /// <summary>
-        /// Informational string stating what operation is currently in progress
-        /// </summary>
-        public string Status { get; private set; }
 
         /// <summary>
         /// Maximum number of failed matchmaking attempts before giving up
@@ -78,6 +72,16 @@ namespace Assets
         public int ConnectToHostTimeout = 9;
 
 
+        private void Log(string message)
+        {
+            if (OnLogEvent != null) OnLogEvent(false, message);
+        }
+        
+        private void LogError(string message)
+        {
+            if (OnLogEvent != null) OnLogEvent(true, message);
+        }
+
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
             var valuesArray = new JsonArray(values);
@@ -99,7 +103,7 @@ namespace Assets
 
         public IEnumerator Start()
         {
-            Status = "registering";
+            Log("registering");
 
             var requirements = new JsonArray();
             requirements.Add(RequireAttribute("gameName", GameName));
@@ -117,14 +121,14 @@ namespace Assets
             if (www.error != null)
             {
                 Debug.LogError("WWW error: " + www.error);
-                Status = "registration failed";
+                LogError("registration failed");
                 yield break;
             }
 
             if (www.responseHeaders["CONTENT-TYPE"] != "application/json")
             {
                 Debug.LogError("Bad content type received: " + www.responseHeaders["CONTENT-TYPE"]);
-                Status = "registration failed";
+                LogError("registration failed");
                 yield break;
             }
 
@@ -136,8 +140,7 @@ namespace Assets
 
             while (failures < MaxFailures)
             {
-                NetworkError = null;
-                Status = "waiting for match";
+                Log("waiting for match");
                 while (true)
                 {
                     www = new WWW(BaseUrl + string.Format("/matches?client={0}", clientData.GetInteger("id")));
@@ -148,23 +151,22 @@ namespace Assets
 
                     if (www.error.StartsWith("404"))
                     {
-                        Debug.Log("No matches yet");
-                        Status = "still waiting for match";
+                        Log("still waiting for match");
                         continue;
                     }
 
-                    Debug.LogError("WWW error: " + www.error);
+                    LogError("WWW error: " + www.error);
                     yield break;
                 }
                 if (www.error != null)
                 {
-                    Status = "wait-for-match failure, trying again in a while";
+                    Log("wait-for-match failure, trying again in a while");
                     ++failures;
                     yield return new WaitForSeconds(UnexpectedServerErrorRetryDelay);
                     continue;
                 }
 
-                Status = "fetching match data";
+                Log("fetching match data");
                 var sessionId = new JsonObject(www.text).GetInteger("id");
 
                 www = new WWW(BaseUrl + string.Format("/matches/{0}", sessionId));
@@ -172,8 +174,8 @@ namespace Assets
 
                 if (www.error != null)
                 {
-                    Status = "failed to fetch match data, trying again in a while";
-                    Debug.LogError("WWW error: " + www.error);
+                    LogError("WWW error: " + www.error);
+                    Log("failed to fetch match data, trying again in a while");
                     ++failures;
                     yield return new WaitForSeconds(UnexpectedServerErrorRetryDelay);
                     continue;
@@ -182,15 +184,15 @@ namespace Assets
                 var clients = new JsonObject(www.text).GetArray("clients");
                 var otherClient = clients.GetInteger(0) + clients.GetInteger(1) - clientData.GetInteger("id");
 
-                Status = "fetching other client data";
+                Log("fetching other client data");
 
                 www = new WWW(BaseUrl + string.Format("/clients/{0}", otherClient));
                 yield return www;
 
                 if (www.error != null)
                 {
-                    Status = "failed to fetch other client data, trying again in a while";
-                    Debug.LogError("WWW error: " + www.error);
+                    LogError("WWW error: " + www.error);
+                    Log("failed to fetch other client data, trying again in a while");
                     ++failures;
                     yield return new WaitForSeconds(UnexpectedServerErrorRetryDelay);
                     continue;
@@ -201,8 +203,7 @@ namespace Assets
                 var isHost = clients.GetInteger(0) == clientData.GetInteger("id");
                 if (isHost)
                 {
-                    Status = "hosting - waiting for other client to join";
-                    NetworkError = null;
+                    Log("hosting - waiting for other client to join");
 
                     var startTime = Time.realtimeSinceStartup;
 
@@ -213,7 +214,7 @@ namespace Assets
                             if (Time.realtimeSinceStartup - startTime > HostWaitForClientTimeout)
                             {
                                 NetworkInterface.StopListening();
-                                Status = "Timeout waiting for client to connect";
+                                Log("Timeout waiting for client to connect");
                                 yield return new WaitForSeconds(1);
                                 break;
                             }
@@ -222,8 +223,8 @@ namespace Assets
                     }
                     else
                     {
-                        Status = "failed to initialize as host";
-                        NetworkError = NetworkInterface.NetworkError;
+                        LogError(NetworkInterface.NetworkError);
+                        Log("failed to initialize as host");
                         yield return new WaitForSeconds(1);
                     }
                 }
@@ -232,8 +233,7 @@ namespace Assets
                     var attempts = 0;
                     while (!NetworkInterface.Connected)
                     {
-                        Status = "connecting to host";
-                        NetworkError = null;
+                        Log("connecting to host");
 
                         var startTime = Time.realtimeSinceStartup;
 
@@ -254,17 +254,17 @@ namespace Assets
 
                         if (!startConnectingOk)
                         {
-                            Status = "error connecting to host - trying again";
-                            NetworkError = NetworkInterface.NetworkError;
+                            LogError(NetworkInterface.NetworkError);
+                            Log("error connecting to host - trying again");
                         }
                         else if (timedOut)
                         {
-                            Status = "timeout connecting to host - trying again";
+                            Log("timeout connecting to host - trying again");
                         }
                         else
                         {
-                            Status = "error connecting to host - trying again";
-                            NetworkError = NetworkInterface.NetworkError;
+                            LogError(NetworkInterface.NetworkError);
+                            Log("error connecting to host - trying again");
                         }
 
                         ++attempts;
@@ -275,7 +275,7 @@ namespace Assets
 
                 if (!NetworkInterface.Connected)
                 {
-                    Status = "giving up connecting, will find another match";
+                    Log("giving up connecting, will find another match");
 
                     // We failed to connect to the peer, so explicitly ask the server not to match us with the same peer again
                     requirements.Add(RequireNotUuid(otherClientData.GetString("uuid")));
@@ -285,8 +285,8 @@ namespace Assets
 
                     if (www.error != null)
                     {
-                        Status = "error while updating requirements to exclude this partner";
-                        Debug.LogError("WWW error: " + www.error);
+                        LogError("WWW error: " + www.error);
+                        Log("error while updating requirements to exclude this partner");
                     }
 
                     ++failures;
@@ -295,7 +295,7 @@ namespace Assets
                 }
 
                 // connected
-                Status = "Connected";
+                Log("Connected");
                 Connected = true;
 
                 break;

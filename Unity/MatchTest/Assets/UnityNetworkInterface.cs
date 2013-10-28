@@ -138,9 +138,11 @@ namespace Assets
         public void OnGUI()
         {
             if (!DisplayDebugUI) return;
-            GUILayout.Label(Network.player.guid);
+
+            GUI.Label(new Rect(0, 0, 0.5f * Screen.width, Screen.height), Network.player.guid);
+
             if (_connectToGuid != null)
-                GUILayout.Label(_connectToGuid);
+                GUI.Label(new Rect(0.5f * Screen.width, 0, 0.5f * Screen.width, Screen.height), _connectToGuid);
         }
 
         private string _connectToGuid;

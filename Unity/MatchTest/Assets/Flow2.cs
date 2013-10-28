@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets
 {
@@ -7,8 +8,9 @@ namespace Assets
         public string BaseUrl = "http://fi-cloud:8080";
 
         private Connector _connector;
-
         private int _connectivityBits;
+        private string _key;
+        private readonly List<string> _log = new List<string>();
 
         public void Start()
         {
@@ -53,7 +55,7 @@ namespace Assets
 
         public void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(Screen.width*0.1f, Screen.height*0.1f, Screen.width*0.8f, Screen.height*0.8f));
+            GUILayout.BeginArea(new Rect(20, 40, Screen.width - 40, Screen.height - 80));
             {
                 GUILayout.BeginVertical();
                 {
@@ -71,14 +73,14 @@ namespace Assets
                             _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
                             _connector.OnSuccess += Success;
                             //_connector.OnFailure += ...;
+                            _connector.OnLogEvent += ProcessLogEvent;
                         }
                     }
                     else
                     {
-                        GuiField("Status", _connector.Status);
-
-                        if (_connector.NetworkError != null)
-                            GuiField("Network error", _connector.NetworkError);
+                        for (int i = _log.Count - 8; i < _log.Count; ++i)
+                            if (i >= 0)
+                                GUILayout.Label(_log[i]);
                     }
                 }
                 GUILayout.EndVertical();
@@ -86,10 +88,9 @@ namespace Assets
             GUILayout.EndArea();
 
             if (_key != null)
-                GUI.Label(new Rect(0, Screen.height - 40, Screen.width, Screen.height - 20), _key);
+                GUI.Label(new Rect(0, Screen.height - 30, Screen.width, Screen.height - 20), _key);
         }
 
-        private string _key;
         private void Success()
         {
             if (Network.isServer)
@@ -103,6 +104,14 @@ namespace Assets
         public void RpcSetKey(string key, NetworkMessageInfo info)
         {
             _key = key;
+        }
+
+        private void ProcessLogEvent(bool isError, string message)
+        {
+            if (isError)
+                _log.Add("    ERROR: " + message);
+            else
+                _log.Add(message);
         }
     }
 }
