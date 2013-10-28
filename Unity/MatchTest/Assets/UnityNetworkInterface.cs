@@ -2,24 +2,33 @@ using UnityEngine;
 
 namespace Assets
 {
+    /// <summary>
+    /// An INetworkInterface for Unity's built-in networking API.  It should be attached to a GameObject which has a NetworkView.  It's not 
+    /// necessary for the NetworkView to be observing anything in particular, we just need it for sending and receiving RPCs.
+    /// 
+    /// No configuration is required, but you can reconfigure the listen port range using 'ListenPortMin' and 'ListenPortMax' if you need to.
+    /// </summary>
     public class UnityNetworkInterface : MonoBehaviour, INetworkInterface
     {
-        private string _expectedClientUuid;
-        private string _localUuid;
+        /// <summary>
+        /// Minimum port number to listen on, when listening
+        /// </summary>
+        public int ListenPortMin = 52202;
+        
+        /// <summary>
+        /// Maximum port number to listen on, when listening
+        /// </summary>
+        public int ListenPortMax = 52299;
 
-        public int PortMin = 52202;
-        public int PortMax = 52299;
-        private string _connectToGuid;
+        /// <summary>
+        /// Enable the display of debugging information via OnGUI
+        /// </summary>
+        public bool DisplayDebugUI = false;
+
 
         public bool Connected { get; private set; }
-        public bool Ready { get; private set; }
         public bool Connecting { get; private set; }
         public string NetworkError { get; private set; }
-
-        public void Start()
-        {
-            Ready = true;
-        }
 
         public string GetConnectionInfo()
         {
@@ -28,23 +37,26 @@ namespace Assets
 
         public string GetBadConnectionInfo()
         {
+            // This isn't great, because it causes the facilitator to reject the connection attempt sooner than you'd get from a NAT failure, but it's OK for now
             return "1234567890";
         }
 
-        public string Listen(string expectedClientUuid)
+        public bool StartListening(string expectedClientUuid)
         {
             _expectedClientUuid = expectedClientUuid;
             _connectToGuid = null;
 
             var error = NetworkConnectionError.NoError;
+            NetworkError = "";
             for (int i = 0; i < 10; ++i)
             {
-                error = Network.InitializeServer(5, (int)(PortMin + (PortMax + 1 - PortMin) * Random.value), true);
+                error = Network.InitializeServer(5, (int)(ListenPortMin + (ListenPortMax + 1 - ListenPortMin) * Random.value), true);
                 if (error == NetworkConnectionError.NoError)
-                    return null;
+                    return true;
             }
 
-            return error.ToString();
+            NetworkError = error.ToString();
+            return false;
         }
 
         [RPC]
@@ -63,15 +75,11 @@ namespace Assets
             Network.Disconnect();
         }
 
-        public bool Connect(string connectionInfo, string localUuid)
+        public bool StartConnecting(string connectionInfo, string localUuid)
         {
             _localUuid = localUuid;
             _connectToGuid = connectionInfo;
 
-            //var addressAndPort = connectionInfo.Split(':');
-            //var address = addressAndPort[0];
-            //var port = int.Parse(addressAndPort[1]);
-            
             var error = Network.Connect(connectionInfo);
             if (error != NetworkConnectionError.NoError)
             {
@@ -86,7 +94,6 @@ namespace Assets
 
         public void OnConnectedToServer()
         {
-            Debug.Log("OnConnectedToServer");
             networkView.RPC("HelloFrom", RPCMode.Server, _localUuid);
             Connecting = false;
             Connected = true;
@@ -94,16 +101,20 @@ namespace Assets
 
         public void OnFailedToConnect(NetworkConnectionError error)
         {
-            Debug.Log("OnFailedToConnect");
             NetworkError = error.ToString();
             Connecting = false;
         }
 
         public void OnGUI()
         {
+            if (!DisplayDebugUI) return;
             GUILayout.Label(Network.player.guid);
             if (_connectToGuid != null)
                 GUILayout.Label(_connectToGuid);
         }
+
+        private string _connectToGuid;
+        private string _expectedClientUuid;
+        private string _localUuid;
     }
 }

@@ -61,12 +61,15 @@ namespace Assets
                     {
                         if (GuiButton("Go"))
                         {
+                            var unityNetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
+                            unityNetworkInterface.DisplayDebugUI = true;
+
                             _connector = gameObject.AddComponent<Connector>();
-                            _connector.NetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
+                            _connector.NetworkInterface = unityNetworkInterface;
                             _connector.BaseUrl = BaseUrl;
                             _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
-                            _connector.OnConnected += Connected;
-                            //_connector.OnConnectFailed += ...;
+                            _connector.OnSuccess += Success;
+                            //_connector.OnFailure += ...;
 
                             _connector.DebugConnectivityBits = _connectivityBits;
                         }
@@ -88,7 +91,7 @@ namespace Assets
         }
 
         private string _key;
-        private void Connected()
+        private void Success()
         {
             if (Network.isServer)
             {

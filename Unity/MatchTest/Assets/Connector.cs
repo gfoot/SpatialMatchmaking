@@ -4,21 +4,79 @@ using UnityEngine;
 
 namespace Assets
 {
+    /// <summary>
+    /// Primary interface for communicating with the matchmaking service.
+    /// 
+    /// Apply this component to a GameObject and initialize the public fields to control the matchmaking process.
+    /// </summary>
     public class Connector : MonoBehaviour
     {
+        /// <summary>
+        /// The INetworkInterface implementation to use for low level networking with other peers
+        /// </summary>
         public INetworkInterface NetworkInterface;
-        public string BaseUrl;
-        public string GameName;
-        public event Action OnConnected;
-        public event Action OnConnectFailed;
 
+        /// <summary>
+        /// The base URL of the matchmaking service
+        /// </summary>
+        public string BaseUrl;
+
+        /// <summary>
+        /// A game name, which is converted into a matchmaking requirement so you only match with other instances of the same game
+        /// </summary>
+        public string GameName;
+
+        /// <summary>
+        /// Called after successful connection
+        /// </summary>
+        public event Action OnSuccess;
+
+        /// <summary>
+        /// Called on giving up, when MaxFailures matchmaking attempts have been made and failed
+        /// </summary>
+        public event Action OnFailure;
+
+        /// <summary>
+        /// Indicates whether a connection has been established
+        /// </summary>
         public bool Connected { get; private set; }
+
+        /// <summary>
+        /// String representation of the last network error to occur
+        /// TODO: replace with an event so the caller can capture all errors that occur
+        /// </summary>
         public string NetworkError { get; private set; }
+
+        /// <summary>
+        /// Informational string stating what operation is currently in progress
+        /// </summary>
         public string Status { get; private set; }
 
-        public int DebugConnectivityBits;
+        /// <summary>
+        /// Maximum number of failed matchmaking attempts before giving up
+        /// </summary>
+        public int MaxFailures = 10;
+        
+        /// <summary>
+        /// Delay after unexpected server errors, before reattempting matchmaking
+        /// </summary>
+        public int UnexpectedServerErrorRetryDelay = 5;
 
-        public float ConnectTimeout = 10;
+        /// <summary>
+        /// Delay after failing to connect to a host, before retrying the connection
+        /// </summary>
+        public int ConnectToHostFailRetryDelay = 1;
+
+        /// <summary>
+        /// Amount of time a host will wait for a client to connect before giving up and requesting a new match
+        /// </summary>
+        public float HostWaitForClientTimeout = 10;
+
+        /// <summary>
+        /// For debug use only - simulate NAT negotiation errors.  Peers can only communicate if they share some bits in common.
+        /// </summary>
+        public int DebugConnectivityBits = 1;
+
 
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
@@ -43,10 +101,6 @@ namespace Assets
 
         public IEnumerator Start()
         {
-            Status = "waiting for network interface";
-            while (!NetworkInterface.Ready)
-                yield return null;
-
             Status = "registering";
 
             var requirements = new JsonArray();
@@ -82,7 +136,7 @@ namespace Assets
             // It doesn't necessarily increase each time through the loop.
             var failures = 0;
 
-            while (failures < 10)
+            while (failures < MaxFailures)
             {
                 NetworkError = null;
                 Status = "waiting for match";
@@ -108,7 +162,7 @@ namespace Assets
                 {
                     Status = "wait-for-match failure, trying again in a while";
                     ++failures;
-                    yield return new WaitForSeconds(5);
+                    yield return new WaitForSeconds(UnexpectedServerErrorRetryDelay);
                     continue;
                 }
 
@@ -123,7 +177,7 @@ namespace Assets
                     Status = "failed to fetch match data, trying again in a while";
                     Debug.LogError("WWW error: " + www.error);
                     ++failures;
-                    yield return new WaitForSeconds(5);
+                    yield return new WaitForSeconds(UnexpectedServerErrorRetryDelay);
                     continue;
                 }
 
@@ -140,13 +194,13 @@ namespace Assets
                     Status = "failed to fetch other client data, trying again in a while";
                     Debug.LogError("WWW error: " + www.error);
                     ++failures;
-                    yield return new WaitForSeconds(5);
+                    yield return new WaitForSeconds(UnexpectedServerErrorRetryDelay);
                     continue;
                 }
 
                 var otherClientData = new JsonObject(www.text);
 
-                var isHost = clients.GetInteger(1) == clientData.GetInteger("id");
+                var isHost = clients.GetInteger(0) == clientData.GetInteger("id");
                 if (isHost)
                 {
                     Status = "hosting - waiting for other client to join";
@@ -154,11 +208,11 @@ namespace Assets
 
                     var startTime = Time.realtimeSinceStartup;
 
-                    NetworkInterface.Listen(otherClientData.GetString("uuid"));
+                    NetworkInterface.StartListening(otherClientData.GetString("uuid"));
 
                     while (!NetworkInterface.Connected)
                     {
-                        if (Time.realtimeSinceStartup - startTime > ConnectTimeout)
+                        if (Time.realtimeSinceStartup - startTime > HostWaitForClientTimeout)
                         {
                             NetworkInterface.StopListening();
                             Status = "Timeout waiting for client to connect";
@@ -182,7 +236,7 @@ namespace Assets
                             connectionInfo = NetworkInterface.GetBadConnectionInfo();
 
                         NetworkError = null;
-                        if (NetworkInterface.Connect(connectionInfo, clientData.GetString("uuid")))
+                        if (NetworkInterface.StartConnecting(connectionInfo, clientData.GetString("uuid")))
                         {
                             while (NetworkInterface.Connecting)
                                 yield return null;
@@ -196,7 +250,7 @@ namespace Assets
                         Debug.LogError(string.Format("Network connection error: {0}", NetworkInterface.NetworkError));
                         ++attempts;
                         if (attempts >= 3) break;
-                        yield return new WaitForSeconds(1);
+                        yield return new WaitForSeconds(ConnectToHostFailRetryDelay);
                     }
                 }
 
@@ -233,10 +287,10 @@ namespace Assets
             // tidy up
             yield return new WWW(BaseUrl + string.Format("/clients/{0}/delete", clientData.GetInteger("id")), new JsonObject().ToByteArray());
 
-            if (Connected && OnConnected != null)
-                OnConnected();
-            else if (!Connected && OnConnectFailed != null)
-                OnConnectFailed();
+            if (Connected && OnSuccess != null)
+                OnSuccess();
+            else if (!Connected && OnFailure != null)
+                OnFailure();
         }
     }
 }
