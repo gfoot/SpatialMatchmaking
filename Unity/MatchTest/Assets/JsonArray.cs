@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Assets
 {
-    public class JsonArray
+    public class JsonArray : IEnumerable
     {
         private readonly List<object> _data = new List<object>();
 
@@ -63,6 +64,11 @@ namespace Assets
             s += " ]";
 
             return s;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _data.GetEnumerator();
         }
 
         public JsonArray()

@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Assets
 {
-    public class JsonObject
+    public class JsonObject : IEnumerable<string>
     {
         private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
 
@@ -36,6 +37,12 @@ namespace Assets
             return (int)((double)_data[key] + 0.5);
         }
 
+        // This method is required for collection initializers to work
+        public void Add(string key, object value)
+        {
+            Set(key, value);
+        }
+
         public JsonObject()
         {
         }
@@ -52,6 +59,16 @@ namespace Assets
         public JsonObject(byte[] data)
             : this(Json.BytesToString(data))
         {
+        }
+
+        public IEnumerator<string> GetEnumerator()
+        {
+            return _data.Keys.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public override string ToString()

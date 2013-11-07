@@ -1,6 +1,5 @@
 package com.studiogobo.fi.Matcher.Model;
 
-import com.studiogobo.fi.Matcher.Model.Requirements.RequireNotUuid;
 import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
 
 import java.util.List;
@@ -14,6 +13,8 @@ public class ClientRecord
     public UUID uuid = new UUID(0, 0);
 
     public List<Requirement> requirements = new Vector<Requirement>();
+
+    public Location location = new Location();
 
     public String connectionInfo;
 

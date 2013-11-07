@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets
@@ -17,6 +18,11 @@ namespace Assets
         public INetworkInterface NetworkInterface;
 
         /// <summary>
+        /// The ILocationInterface implementation to use when sending location data to the server
+        /// </summary>
+        public ILocationInterface LocationInterface;
+
+        /// <summary>
         /// The base URL of the matchmaking service
         /// </summary>
         public string BaseUrl;
@@ -25,6 +31,11 @@ namespace Assets
         /// A game name, which is converted into a matchmaking requirement so you only match with other instances of the same game
         /// </summary>
         public string GameName;
+
+        /// <summary>
+        /// Maximum radius for location-based matching
+        /// </summary>
+        public int MaxMatchRadius;
 
         /// <summary>
         /// Called after successful connection
@@ -51,6 +62,11 @@ namespace Assets
         /// </summary>
         public int MaxFailures = 10;
         
+        /// <summary>
+        /// Maximum number of seconds to wait for location service initialization
+        /// </summary>
+        public int LocationInitTimeout = 20;
+
         /// <summary>
         /// Delay after unexpected server errors, before reattempting matchmaking
         /// </summary>
@@ -84,34 +100,60 @@ namespace Assets
 
         private static JsonObject RequireAttribute(string attribute, params string[] values)
         {
-            var valuesArray = new JsonArray(values);
-
-            var result = new JsonObject();
-            result.Set("@type", "requireAttribute");
-            result.Set("attribute", attribute);
-            result.Set("values", valuesArray);
-            return result;
+            return new JsonObject {
+                                      { "@type", "requireAttribute" }, 
+                                      { "attribute", attribute }, 
+                                      { "values", new JsonArray(values) }
+                                  };
         }
 
         private static JsonObject RequireNotUuid(string uuid)
         {
-            var result = new JsonObject();
-            result.Set("@type", "requireNotUuid");
-            result.Set("uuid", uuid);
-            return result;
+            return new JsonObject {
+                                      { "@type", "requireNotUuid" }, 
+                                      { "uuid", uuid }
+                                  };
+        }
+
+        private static JsonObject RequireLocationWithin(int radius)
+        {
+            return new JsonObject {
+                                      { "@type", "requireLocationWithin" },
+                                      { "radius", radius }
+                                  };
         }
 
         public IEnumerator Start()
         {
+            Log("waiting for location");
+            yield return StartCoroutine(LocationInterface.Init(LocationInitTimeout));
+            if (!LocationInterface.Ready)
+            {
+                LogError("Location service failed");
+                if (OnFailure != null)
+                    OnFailure();
+                yield break;
+            }
+
             Log("registering");
 
-            var requirements = new JsonArray();
-            requirements.Add(RequireAttribute("gameName", GameName));
+            var requirements = new JsonArray
+                                   {
+                                       RequireAttribute("gameName", GameName),
+                                       RequireLocationWithin(MaxMatchRadius)
+                                   };
 
-            var postData = new JsonObject();
-            postData.Set("uuid", Guid.NewGuid().ToString());
-            postData.Set("connectionInfo", NetworkInterface.GetConnectionInfo());
-            postData.Set("requirements", requirements);
+            var location = LocationInterface.Location;
+
+            var postData = new JsonObject {
+                { "uuid", Guid.NewGuid().ToString() },
+                { "connectionInfo", NetworkInterface.GetConnectionInfo() },
+                { "location", new JsonObject {
+                    {"longitude", location.Longitude},
+                    {"latitude", location.Latitude},
+                }},
+                { "requirements", requirements },
+            };
 
             var headers = new Hashtable();
             headers["Content-Type"] = "application/json";
@@ -133,6 +175,8 @@ namespace Assets
             }
 
             var clientData = new JsonObject(www.text);
+            Debug.Log(string.Format("location: {0}, {1}", clientData.GetObject("location").GetNumber("longitude"),
+                                    clientData.GetObject("location").GetNumber("latitude")));
 
             // "failures" counts the number of times we hit error cases from the server, so we can retry on errors but still give up if it's really broken.
             // It doesn't necessarily increase each time through the loop.

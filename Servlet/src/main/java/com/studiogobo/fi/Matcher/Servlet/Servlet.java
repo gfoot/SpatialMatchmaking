@@ -1,6 +1,7 @@
 package com.studiogobo.fi.Matcher.Servlet;
 
 import com.studiogobo.fi.Matcher.Model.ClientRecord;
+import com.studiogobo.fi.Matcher.Model.Location;
 import com.studiogobo.fi.Matcher.Model.MatchRecord;
 import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -78,6 +79,7 @@ public class Servlet
         UUID newUuid = null;
         Vector<Requirement> newRequirements = null;
         String newConnectionInfo = null;
+        Location newLocation = null;
 
         Iterator it = data.keys();
         while (it.hasNext())
@@ -139,6 +141,19 @@ public class Servlet
             {
                 newConnectionInfo = data.getString(key);
             }
+            else if (key.equals("location"))
+            {
+                try {
+                    JSONObject jsonObject = data.getJSONObject(key);
+                    newLocation = new Location();
+                    newLocation.longitude = jsonObject.getDouble("longitude");
+                    newLocation.latitude = jsonObject.getDouble("latitude");
+                } catch (JSONException e) {
+                    Log("    error: " + e.toString());
+                    e.printStackTrace();
+                    throw new WebApplicationException(Response.Status.BAD_REQUEST);
+                }
+            }
             else
             {
                 Log("    unknown field: " + key);
@@ -152,6 +167,8 @@ public class Servlet
             client.requirements = newRequirements;
         if (newConnectionInfo != null)
             client.connectionInfo = newConnectionInfo;
+        if (newLocation != null)
+            client.location = newLocation;
 
         // TODO: unlock
     }
