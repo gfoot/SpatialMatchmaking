@@ -6,6 +6,7 @@ namespace Assets
     public class Flow2 : MonoBehaviour
     {
         public string BaseUrl = "http://fi-cloud:8080";
+        public GUISkin LargeGuiSkin;
 
         private Connector _connector;
         private int _connectivityBits;
@@ -17,6 +18,7 @@ namespace Assets
         private string _testLongitude = "-0.1729644";
 
         private bool _useTestLocationInterface;
+        private int _guiScale;
 
         public void Start()
         {
@@ -34,6 +36,16 @@ namespace Assets
             _testLocationInterface = new TestLocationInterface();
 
             SetTestLocation(0.0, 0.0);
+
+            Network.natFacilitatorIP = "130.206.83.114";
+            Network.natFacilitatorPort = 50005;
+
+            _guiScale = Screen.width / 300;
+            if (_guiScale < 1) _guiScale = 1;
+            LargeGuiSkin.label.fontSize = 10 * _guiScale;
+            LargeGuiSkin.button.fontSize = 13 * _guiScale;
+            LargeGuiSkin.toggle.padding.left = 20 * _guiScale;
+            LargeGuiSkin.toggle.padding.top = 20 * _guiScale;
         }
 
         private void UpdateBackgroundColor()
@@ -54,7 +66,7 @@ namespace Assets
         {
             GUILayout.BeginHorizontal();
             {
-                GUILayout.Label(label, GUILayout.Width(100));
+                GUILayout.Label(label, GUILayout.Width(Screen.width / 3));
                 GUILayout.Label(value.ToString(), GUILayout.ExpandWidth(true));
             }
             GUILayout.EndHorizontal();
@@ -75,11 +87,17 @@ namespace Assets
 
         public void OnGUI()
         {
+            GUI.skin = LargeGuiSkin;
+
             GUILayout.BeginArea(new Rect(20, 40, Screen.width - 40, Screen.height - 80));
             {
                 GUILayout.BeginVertical();
                 {
-                    _useTestLocationInterface = GUILayout.Toggle(_useTestLocationInterface, "Use test LocationInterface");
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Fake location", GUILayout.Width(Screen.width / 4));
+                    _useTestLocationInterface = GUILayout.Toggle(_useTestLocationInterface, "");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
                     if (!_useTestLocationInterface)
                     {
                         if (Input.location.status == LocationServiceStatus.Stopped)
@@ -87,7 +105,7 @@ namespace Assets
                         if (Input.location.status == LocationServiceStatus.Running)
                         {
                             GUILayout.BeginHorizontal();
-                            GUILayout.Label("lat/long", GUILayout.Width(70));
+                            GUILayout.Label("lat/long", GUILayout.Width(Screen.width / 4));
                             GUILayout.Label(string.Format("{0} / {1}", Input.location.lastData.latitude,
                                                           Input.location.lastData.longitude));
                             GUILayout.EndHorizontal();
@@ -97,10 +115,10 @@ namespace Assets
                     if (_useTestLocationInterface)
                     {
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("lat/long", GUILayout.Width(70));
+                        GUILayout.Label("lat/long", GUILayout.Width(Screen.width / 4));
 
-                        _testLatitude = GUILayout.TextField(_testLatitude, GUILayout.Width(100));
-                        _testLongitude = GUILayout.TextField(_testLongitude, GUILayout.Width(100));
+                        _testLatitude = GUILayout.TextField(_testLatitude, GUILayout.Width(Screen.width / 4));
+                        _testLongitude = GUILayout.TextField(_testLongitude, GUILayout.Width(Screen.width / 4));
                         if (GUILayout.Button("Set"))
                         {
                             double latitude;
@@ -113,9 +131,9 @@ namespace Assets
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("", GUILayout.Width(70));
-                        GUILayout.Label(_testLocationInterface.Location.Latitude.ToString(), GUILayout.Width(100));
-                        GUILayout.Label(_testLocationInterface.Location.Longitude.ToString(), GUILayout.Width(100));
+                        GUILayout.Label("", GUILayout.Width(Screen.width / 4));
+                        GUILayout.Label(_testLocationInterface.Location.Latitude.ToString(), GUILayout.Width(Screen.width / 4));
+                        GUILayout.Label(_testLocationInterface.Location.Longitude.ToString(), GUILayout.Width(Screen.width / 4));
                         GUILayout.FlexibleSpace();
                         GUILayout.EndHorizontal();
                     }
@@ -124,7 +142,7 @@ namespace Assets
                     {
                         {
                             GUILayout.BeginHorizontal();
-                            GUILayout.Label("conn bits", GUILayout.Width(70));
+                            GUILayout.Label("conn bits", GUILayout.Width(Screen.width / 4));
                             var r = GUILayout.Toggle((_connectivityBits & 1) != 0, "");
                             var g = GUILayout.Toggle((_connectivityBits & 2) != 0, "");
                             var b = GUILayout.Toggle((_connectivityBits & 4) != 0, "");
@@ -158,15 +176,18 @@ namespace Assets
                                 _connector.OnFailure += locationInterface.Dispose;
                             }
                         }
+
+                        GUILayout.FlexibleSpace();
                     }
                     else
                     {
-                        for (int i = _log.Count - 8; i < _log.Count; ++i)
-                            if (i >= 0)
-                                GUILayout.Label(_log[i]);
+                        var s = "";
+                        for (int i = 0; i < _log.Count; ++i)
+                            s += _log[i] + "\n";
+
+                        GUILayout.TextArea(s, GUILayout.ExpandHeight(true));
                     }
 
-                    GUILayout.FlexibleSpace();
                     if (GuiButton("Quit"))
                         Application.Quit();
                 }
