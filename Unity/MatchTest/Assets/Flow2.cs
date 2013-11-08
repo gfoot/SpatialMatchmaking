@@ -96,7 +96,6 @@ namespace Assets
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Fake location", GUILayout.Width(Screen.width / 4));
                     _useTestLocationInterface = GUILayout.Toggle(_useTestLocationInterface, "");
-                    GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                     if (!_useTestLocationInterface)
                     {
