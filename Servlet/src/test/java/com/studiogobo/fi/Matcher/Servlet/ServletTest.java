@@ -1,5 +1,6 @@
 package com.studiogobo.fi.Matcher.Servlet;
 
+import com.studiogobo.fi.Matcher.Model.ClientRecord;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -89,5 +90,14 @@ public class ServletTest {
             System.out.println(((TestClass)l.get(0)).number);
             System.out.println(((TestClass2)l.get(1)).string);
         }
+    }
+
+    @Test
+    public void testModel() throws Exception
+    {
+        ClientRecord record = new ClientRecord();
+        ObjectMapper mapper = new ObjectMapper();
+        String data = mapper.writeValueAsString(record);
+        System.out.println(data);
     }
 }
