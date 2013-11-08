@@ -125,26 +125,24 @@ namespace Assets
                         {
                             GUILayout.BeginHorizontal();
                             GUILayout.Label("conn bits", GUILayout.Width(70));
-                            bool r = GUILayout.Toggle((_connectivityBits & 1) != 0, "");
-                            bool g = GUILayout.Toggle((_connectivityBits & 2) != 0, "");
-                            bool b = GUILayout.Toggle((_connectivityBits & 4) != 0, "");
+                            var r = GUILayout.Toggle((_connectivityBits & 1) != 0, "");
+                            var g = GUILayout.Toggle((_connectivityBits & 2) != 0, "");
+                            var b = GUILayout.Toggle((_connectivityBits & 4) != 0, "");
                             _connectivityBits = (r ? 1 : 0) | (g ? 2 : 0) | (b ? 4 : 0);
                             UpdateBackgroundColor();
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                         }
+
                         if (GuiButton("Go"))
                         {
                             var unityNetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
                             unityNetworkInterface.DisplayDebugUI = true;
                             unityNetworkInterface.DebugConnectivityBits = _connectivityBits;
 
-                            var locationInterface = _testLocationInterface;
-                            //var locationInterface = new UnityInputLocationInterface();
-
                             _connector = gameObject.AddComponent<Connector>();
                             _connector.NetworkInterface = unityNetworkInterface;
-                            _connector.LocationInterface = locationInterface;
+                            _connector.LocationInterface = _testLocationInterface;
                             _connector.BaseUrl = BaseUrl;
                             _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
                             _connector.MaxMatchRadius = 500;
@@ -152,8 +150,13 @@ namespace Assets
                             //_connector.OnFailure += ...;
                             _connector.OnLogEvent += ProcessLogEvent;
 
-                            //_connector.OnSuccess += locationInterface.Dispose;
-                            //_connector.OnFailure += locationInterface.Dispose;
+                            if (!_useTestLocationInterface)
+                            {
+                                var locationInterface = new UnityInputLocationInterface();
+                                _connector.LocationInterface = locationInterface;
+                                _connector.OnSuccess += locationInterface.Dispose;
+                                _connector.OnFailure += locationInterface.Dispose;
+                            }
                         }
                     }
                     else
@@ -162,6 +165,10 @@ namespace Assets
                             if (i >= 0)
                                 GUILayout.Label(_log[i]);
                     }
+
+                    GUILayout.FlexibleSpace();
+                    if (GuiButton("Quit"))
+                        Application.Quit();
                 }
                 GUILayout.EndVertical();
             }
