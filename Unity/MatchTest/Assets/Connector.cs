@@ -274,6 +274,12 @@ namespace Assets
                 }
                 else
                 {
+                    // This really shouldn't be here.  We probably need a way for the host to not fill in the connectionInfo until 
+                    // it is ready to accept connections, and this delay should be replaced by the client polling for that info to 
+                    // become available.  (The barrier to this is that currently updating client info clears all matches...)
+                    Log("waiting for a few seconds to let the host start");
+                    yield return new WaitForSeconds(4);
+
                     var attempts = 0;
                     while (!NetworkInterface.Connected)
                     {
