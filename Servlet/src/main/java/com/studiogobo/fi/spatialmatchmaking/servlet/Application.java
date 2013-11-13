@@ -1,11 +1,11 @@
-package com.studiogobo.fi.Matcher.Servlet;
+package com.studiogobo.fi.spatialmatchmaking.servlet;
 
 import javax.annotation.PreDestroy;
 import javax.ws.rs.ApplicationPath;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationPath("Matcher")
+@ApplicationPath("matcher")
 public class Application extends javax.ws.rs.core.Application
 {
     private static final Set<Object> singletons = new HashSet<Object>();

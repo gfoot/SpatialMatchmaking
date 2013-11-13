@@ -1,6 +1,6 @@
-package com.studiogobo.fi.Matcher.Model;
+package com.studiogobo.fi.spatialmatchmaking.model;
 
-import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
+import com.studiogobo.fi.spatialmatchmaking.model.requirements.Requirement;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,6 +1,6 @@
-package com.studiogobo.fi.Matcher.Servlet;
+package com.studiogobo.fi.spatialmatchmaking.servlet;
 
-import com.studiogobo.fi.Matcher.Model.ClientRecord;
+import com.studiogobo.fi.spatialmatchmaking.model.ClientRecord;
 
 import java.util.concurrent.CountDownLatch;
 

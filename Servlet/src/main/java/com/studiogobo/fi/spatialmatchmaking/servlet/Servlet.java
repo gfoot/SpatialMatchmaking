@@ -1,9 +1,9 @@
-package com.studiogobo.fi.Matcher.Servlet;
+package com.studiogobo.fi.spatialmatchmaking.servlet;
 
-import com.studiogobo.fi.Matcher.Model.ClientRecord;
-import com.studiogobo.fi.Matcher.Model.Location;
-import com.studiogobo.fi.Matcher.Model.MatchRecord;
-import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
+import com.studiogobo.fi.spatialmatchmaking.model.ClientRecord;
+import com.studiogobo.fi.spatialmatchmaking.model.Location;
+import com.studiogobo.fi.spatialmatchmaking.model.MatchRecord;
+import com.studiogobo.fi.spatialmatchmaking.model.requirements.Requirement;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.CollectionType;
 import org.codehaus.jackson.map.type.TypeFactory;

@@ -1,6 +1,6 @@
-package com.studiogobo.fi.Matcher.Model.Requirements;
+package com.studiogobo.fi.spatialmatchmaking.model.requirements;
 
-import com.studiogobo.fi.Matcher.Model.ClientRecord;
+import com.studiogobo.fi.spatialmatchmaking.model.ClientRecord;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("requireLocationWithin")

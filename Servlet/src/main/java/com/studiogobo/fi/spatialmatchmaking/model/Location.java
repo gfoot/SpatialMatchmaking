@@ -1,4 +1,4 @@
-package com.studiogobo.fi.Matcher.Model;
+package com.studiogobo.fi.spatialmatchmaking.model;
 
 public class Location
 {

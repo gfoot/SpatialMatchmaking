@@ -1,4 +1,4 @@
-package com.studiogobo.fi.Matcher.Servlet;
+package com.studiogobo.fi.spatialmatchmaking.servlet;
 
 import org.codehaus.jackson.map.ObjectMapper;
 

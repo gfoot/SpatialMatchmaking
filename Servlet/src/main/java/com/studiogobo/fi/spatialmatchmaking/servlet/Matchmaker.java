@@ -1,7 +1,7 @@
-package com.studiogobo.fi.Matcher.Servlet;
+package com.studiogobo.fi.spatialmatchmaking.servlet;
 
-import com.studiogobo.fi.Matcher.Model.*;
-import com.studiogobo.fi.Matcher.Model.Requirements.Requirement;
+import com.studiogobo.fi.spatialmatchmaking.model.*;
+import com.studiogobo.fi.spatialmatchmaking.model.requirements.Requirement;
 
 import java.util.ArrayList;
 
