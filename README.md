@@ -1,7 +1,7 @@
 SpatialMatchmaking
 ==================
 
-This package contains a sample server, a Unity client implementation, and a demo of the usage of the Unity package.  
+This package contains a sample server, a Unity client implementation, and a demo of the usage of the Unity package. 
 The server also includes a web-based Javascript client for test purposes.
 
 Software Requirements
@@ -86,7 +86,7 @@ the "SpatialMatchmakingDemo" component.  This specifies which instance of the se
 should probably be http://localhost:8888, or with the default deployment settings you can use http://fi-cloud:8080/matcher, 
 substituting for fi-cloud if you don't have a name alias set up in /etc/hosts.
 
-The client simulates connectivity issues according to three bits which you can toggle before pressing the 'Go' button.  
+The client simulates connectivity issues according to three bits which you can toggle before pressing the 'Go' button. 
 The initial setting of these bits is random, and the background colour also indicates their state.  Clients can only 
 communicate with each other if they share at least one set bit in common.  This can be used loosely to simulate NAT 
 traversal problems and other connectivity issues.
