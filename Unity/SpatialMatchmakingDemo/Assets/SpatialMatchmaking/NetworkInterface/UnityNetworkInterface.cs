@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     /// <summary>
     /// An INetworkInterface for Unity's built-in networking API.  It should be attached to a GameObject which has a NetworkView.  It's not 

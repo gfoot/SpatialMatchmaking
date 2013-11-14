@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     public class JsonObject : IEnumerable<string>
     {

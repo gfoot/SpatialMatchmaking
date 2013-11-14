@@ -1,4 +1,4 @@
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     /// <summary>
     /// Abstraction of the low level networking functionality.  Supply an implementation of this interface to

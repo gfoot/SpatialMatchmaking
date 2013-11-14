@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     internal class UnityInputLocationInterface : ILocationInterface, IDisposable
     {

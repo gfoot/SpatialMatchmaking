@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     public interface ILocationInterface
     {

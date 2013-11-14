@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     public class JsonTest : MonoBehaviour
     {

@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using Assets.SpatialMatchmaking;
 using UnityEngine;
 
 namespace Assets
 {
-    public class Flow2 : MonoBehaviour
+    public class SpatialMatchmakingDemo : MonoBehaviour
     {
         public string BaseUrl = "http://fi-cloud:8080";
+        public int MaxMatchRadius = 500;
         public GUISkin LargeGuiSkin;
 
-        private Connector _connector;
+        private MatchClient _matchClient;
         private int _connectivityBits;
         private string _key;
         private readonly List<string> _log = new List<string>();
@@ -37,8 +39,8 @@ namespace Assets
 
             SetTestLocation(0.0, 0.0);
 
-            Network.natFacilitatorIP = "130.206.83.114";
-            Network.natFacilitatorPort = 50005;
+            //Network.natFacilitatorIP = "130.206.83.114";
+            //Network.natFacilitatorPort = 50005;
 
             _guiScale = Screen.width / 300;
             if (_guiScale < 1) _guiScale = 1;
@@ -62,41 +64,20 @@ namespace Assets
             _testLocationInterface.SetLocation(new Location { Latitude = latitude, Longitude = longitude });
         }
 
-        private static void GuiField<T>(string label, T value)
-        {
-            GUILayout.BeginHorizontal();
-            {
-                GUILayout.Label(label, GUILayout.Width(Screen.width / 3));
-                GUILayout.Label(value.ToString(), GUILayout.ExpandWidth(true));
-            }
-            GUILayout.EndHorizontal();
-        }
-
-        private static bool GuiButton(string label)
-        {
-            bool value;
-
-            GUILayout.BeginHorizontal();
-            {
-                value = GUILayout.Button(label, GUILayout.ExpandWidth(false));
-            }
-            GUILayout.EndHorizontal();
-
-            return value;
-        }
-
         public void OnGUI()
         {
             GUI.skin = LargeGuiSkin;
+            int quarterWidth = Screen.width / 4;
 
             GUILayout.BeginArea(new Rect(20, 40, Screen.width - 40, Screen.height - 80));
             {
                 GUILayout.BeginVertical();
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Fake location", GUILayout.Width(Screen.width / 4));
+                    GUILayout.Label("Fake location", GUILayout.Width(quarterWidth));
                     _useTestLocationInterface = GUILayout.Toggle(_useTestLocationInterface, "");
                     GUILayout.EndHorizontal();
+                 
                     if (!_useTestLocationInterface)
                     {
                         if (Input.location.status == LocationServiceStatus.Stopped)
@@ -104,7 +85,7 @@ namespace Assets
                         if (Input.location.status == LocationServiceStatus.Running)
                         {
                             GUILayout.BeginHorizontal();
-                            GUILayout.Label("lat/long", GUILayout.Width(Screen.width / 4));
+                            GUILayout.Label("lat/long", GUILayout.Width(quarterWidth));
                             GUILayout.Label(string.Format("{0} / {1}", Input.location.lastData.latitude,
                                                           Input.location.lastData.longitude));
                             GUILayout.EndHorizontal();
@@ -114,10 +95,10 @@ namespace Assets
                     if (_useTestLocationInterface)
                     {
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("lat/long", GUILayout.Width(Screen.width / 4));
+                        GUILayout.Label("lat/long", GUILayout.Width(quarterWidth));
 
-                        _testLatitude = GUILayout.TextField(_testLatitude, GUILayout.Width(Screen.width / 4));
-                        _testLongitude = GUILayout.TextField(_testLongitude, GUILayout.Width(Screen.width / 4));
+                        _testLatitude = GUILayout.TextField(_testLatitude, GUILayout.Width(quarterWidth));
+                        _testLongitude = GUILayout.TextField(_testLongitude, GUILayout.Width(quarterWidth));
                         if (GUILayout.Button("Set"))
                         {
                             double latitude;
@@ -130,18 +111,18 @@ namespace Assets
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("", GUILayout.Width(Screen.width / 4));
-                        GUILayout.Label(_testLocationInterface.Location.Latitude.ToString(), GUILayout.Width(Screen.width / 4));
-                        GUILayout.Label(_testLocationInterface.Location.Longitude.ToString(), GUILayout.Width(Screen.width / 4));
+                        GUILayout.Label("", GUILayout.Width(quarterWidth));
+                        GUILayout.Label(string.Format("{0}", _testLocationInterface.Location.Latitude), GUILayout.Width(quarterWidth));
+                        GUILayout.Label(string.Format("{0}", _testLocationInterface.Location.Longitude), GUILayout.Width(quarterWidth));
                         GUILayout.FlexibleSpace();
                         GUILayout.EndHorizontal();
                     }
 
-                    if (_connector == null)
+                    if (_matchClient == null)
                     {
                         {
                             GUILayout.BeginHorizontal();
-                            GUILayout.Label("conn bits", GUILayout.Width(Screen.width / 4));
+                            GUILayout.Label("conn bits", GUILayout.Width(quarterWidth));
                             var r = GUILayout.Toggle((_connectivityBits & 1) != 0, "");
                             var g = GUILayout.Toggle((_connectivityBits & 2) != 0, "");
                             var b = GUILayout.Toggle((_connectivityBits & 4) != 0, "");
@@ -151,30 +132,10 @@ namespace Assets
                             GUILayout.EndHorizontal();
                         }
 
-                        if (GuiButton("Go"))
-                        {
-                            var unityNetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
-                            unityNetworkInterface.DisplayDebugUI = true;
-                            unityNetworkInterface.DebugConnectivityBits = _connectivityBits;
-
-                            _connector = gameObject.AddComponent<Connector>();
-                            _connector.NetworkInterface = unityNetworkInterface;
-                            _connector.LocationInterface = _testLocationInterface;
-                            _connector.BaseUrl = BaseUrl;
-                            _connector.GameName = "com.studiogobo.fi.Matcher.Unity.MatchTest";
-                            _connector.MaxMatchRadius = 500;
-                            _connector.OnSuccess += Success;
-                            //_connector.OnFailure += ...;
-                            _connector.OnLogEvent += ProcessLogEvent;
-
-                            if (!_useTestLocationInterface)
-                            {
-                                var locationInterface = new UnityInputLocationInterface();
-                                _connector.LocationInterface = locationInterface;
-                                _connector.OnSuccess += locationInterface.Dispose;
-                                _connector.OnFailure += locationInterface.Dispose;
-                            }
-                        }
+                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("Go", GUILayout.ExpandWidth(false)))
+                            Go();
+                        GUILayout.EndHorizontal();
 
                         GUILayout.FlexibleSpace();
                     }
@@ -187,8 +148,10 @@ namespace Assets
                         GUILayout.TextArea(s, GUILayout.ExpandHeight(true));
                     }
 
-                    if (GuiButton("Quit"))
+                    GUILayout.BeginHorizontal();
+                    if (GUILayout.Button("Quit", GUILayout.ExpandWidth(false)))
                         Application.Quit();
+                    GUILayout.EndHorizontal();
                 }
                 GUILayout.EndVertical();
             }
@@ -198,11 +161,36 @@ namespace Assets
                 GUI.Label(new Rect(0, Screen.height - 30, Screen.width, Screen.height - 20), _key);
         }
 
+        private void Go()
+        {
+            var unityNetworkInterface = gameObject.AddComponent<UnityNetworkInterface>();
+            unityNetworkInterface.DisplayDebugUI = true;
+            unityNetworkInterface.DebugConnectivityBits = _connectivityBits;
+
+            _matchClient = gameObject.AddComponent<MatchClient>();
+            _matchClient.NetworkInterface = unityNetworkInterface;
+            _matchClient.LocationInterface = _testLocationInterface;
+            _matchClient.BaseUrl = BaseUrl;
+            _matchClient.GameName = "com.studiogobo.fi.SpatialMatchmaking.Unity.SpatialMatchmakingDemo";
+            _matchClient.MaxMatchRadius = MaxMatchRadius;
+            _matchClient.OnSuccess += Success;
+            //_matchClient.OnFailure += ...;
+            _matchClient.OnLogEvent += ProcessLogEvent;
+
+            if (!_useTestLocationInterface)
+            {
+                var locationInterface = new UnityInputLocationInterface();
+                _matchClient.LocationInterface = locationInterface;
+                _matchClient.OnSuccess += locationInterface.Dispose;
+                _matchClient.OnFailure += locationInterface.Dispose;
+            }
+        }
+
         private void Success()
         {
             if (Network.isServer)
             {
-                _key = ((int)(10000*Random.value)).ToString();
+                _key = string.Format("{0}", (int)(10000*Random.value));
                 networkView.RPC("RpcSetKey", RPCMode.Others, _key);
             }
         }

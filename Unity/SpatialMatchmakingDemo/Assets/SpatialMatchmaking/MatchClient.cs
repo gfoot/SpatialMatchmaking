@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.SpatialMatchmaking
 {
     /// <summary>
     /// Primary interface for communicating with the matchmaking service.
     /// 
     /// Apply this component to a GameObject and initialize the public fields to control the matchmaking process.
     /// </summary>
-    public class Connector : MonoBehaviour
+    public class MatchClient : MonoBehaviour
     {
         /// <summary>
         /// The INetworkInterface implementation to use for low level networking with other peers
@@ -175,8 +174,6 @@ namespace Assets
             }
 
             var clientData = new JsonObject(www.text);
-            Debug.Log(string.Format("location: {0}, {1}", clientData.GetObject("location").GetNumber("longitude"),
-                                    clientData.GetObject("location").GetNumber("latitude")));
 
             // "failures" counts the number of times we hit error cases from the server, so we can retry on errors but still give up if it's really broken.
             // It doesn't necessarily increase each time through the loop.

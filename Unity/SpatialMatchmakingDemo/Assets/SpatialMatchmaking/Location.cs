@@ -1,4 +1,4 @@
-﻿namespace Assets
+﻿namespace Assets.SpatialMatchmaking
 {
 	public struct Location
 	{
