@@ -288,7 +288,7 @@ public class Servlet
 
         if (!awaitResult)
         {
-            return Response.status(404).header("Retry-After", "1").build();
+            return Response.status(204).header("Retry-After", "1").build();
         }
 
         Log("    match id " + client.match_id);
@@ -383,7 +383,7 @@ public class Servlet
         {
             Log("    client " + client_id + " not found");
 
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         return client;
     }

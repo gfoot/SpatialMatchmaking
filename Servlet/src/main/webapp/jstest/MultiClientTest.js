@@ -182,24 +182,28 @@ function Client(name)
             type: "GET",
             dataType: "json",
             success: function (result) {
-                var sessionID = result["id"];
-                if (sessionID != "0") {
-                    mSessionID = sessionID;
-                    client.UpdateView();
-                    client.GetMatchInfo();
+                if (result == null)
+                {
+                    // No match yet - try again
+                    console.log(name + ": no match yet, will retry");
+                    client.DoLater(client.GetMatch, 500);
                 }
                 else
                 {
-                    alert(name + ": client received zero match ID");
+                    var sessionID = result["id"];
+                    if (sessionID != "0") {
+                        mSessionID = sessionID;
+                        client.UpdateView();
+                        client.GetMatchInfo();
+                    }
+                    else
+                    {
+                        alert(name + ": client received zero match ID");
+                    }
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 404)
-                {
-                    // Try again
-                    client.DoLater(client.GetMatch, 500);
-                }
-                else if (jqXHR.status == 400)
                 {
                     console.log(name + ": poll failed, bad client ID (" + mClientID + ")? - " + jqXHR.status + " - " + errorThrown + " - " + textStatus);
 
@@ -253,7 +257,6 @@ function Client(name)
             success: function(result)
             {
                 mOtherClientInfo = result;
-                console.log(mOtherClientInfo);
                 client.UpdateView();
                 client.Matched();
             },

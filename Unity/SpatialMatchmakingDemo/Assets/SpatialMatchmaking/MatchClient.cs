@@ -187,17 +187,19 @@ namespace Assets.SpatialMatchmaking
                     www = new WWW(BaseUrl + string.Format("/matches?client={0}", clientData.GetInteger("id")));
                     yield return www;
 
-                    if (www.error == null)
-                        break;
+                    if (www.error != null)
+                    {
+                        LogError("WWW error: " + www.error);
+                        yield break;
+                    }
 
-                    if (www.error.StartsWith("404"))
+                    if (www.text == "")
                     {
                         Log("still waiting for match");
                         continue;
                     }
 
-                    LogError("WWW error: " + www.error);
-                    yield break;
+                    break;
                 }
                 if (www.error != null)
                 {

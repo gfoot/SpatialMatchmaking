@@ -39,9 +39,6 @@ namespace Assets
 
             SetTestLocation(0.0, 0.0);
 
-            //Network.natFacilitatorIP = "130.206.83.114";
-            //Network.natFacilitatorPort = 50005;
-
             _guiScale = Screen.width / 300;
             if (_guiScale < 1) _guiScale = 1;
             LargeGuiSkin.label.fontSize = 10 * _guiScale;
