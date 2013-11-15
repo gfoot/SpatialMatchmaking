@@ -4,7 +4,7 @@ import com.studiogobo.fi.spatialmatchmaking.model.ClientRecord;
 
 import java.util.concurrent.CountDownLatch;
 
-public class ServletClientRecord
+public class ServletClientRecord extends Timestamped
 {
     public ClientRecord clientRecord;
     public int match_id = 0;

@@ -4,6 +4,8 @@ import com.studiogobo.fi.spatialmatchmaking.model.*;
 import com.studiogobo.fi.spatialmatchmaking.model.requirements.Requirement;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Matchmaker
 {
@@ -95,7 +97,7 @@ public class Matchmaker
                 clientIdList[i] = foundClients.get(i).clientRecord.id;
 
             // Create a MatchRecord
-            MatchRecord match = new MatchRecord(matchData.getNewId(), clientIdList);
+            MatchRecord match = new MatchRecord(lastMatchId.incrementAndGet(), clientIdList);
             matchData.put(match.id, match);
 
             Log("        new match id " + match.id);
@@ -141,7 +143,7 @@ public class Matchmaker
         }
     }
 
-    public Matchmaker(PerishableCollection<ServletClientRecord> data)
+    public Matchmaker(ConcurrentHashMap<Integer, ServletClientRecord> data)
     {
         clientData = data;
     }
@@ -149,6 +151,7 @@ public class Matchmaker
     public MatchRecord GetMatchRecord(int id) { return matchData.get(id); }
     public int NumMatches() { return matchData.size(); }
 
-    private PerishableCollection<ServletClientRecord> clientData;
-    private PerishableCollection<MatchRecord> matchData = new PerishableCollection<MatchRecord>(5000);
+    private ConcurrentHashMap<Integer, ServletClientRecord> clientData;
+    private ConcurrentHashMap<Integer, MatchRecord> matchData = new ConcurrentHashMap<Integer, MatchRecord>();
+    private AtomicInteger lastMatchId = new AtomicInteger();
 }

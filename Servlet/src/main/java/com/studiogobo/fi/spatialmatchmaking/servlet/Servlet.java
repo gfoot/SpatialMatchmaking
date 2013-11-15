@@ -19,7 +19,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Path("/")
 public class Servlet
@@ -51,7 +53,8 @@ public class Servlet
     @Produces("application/json")
     @Consumes("application/json")
     public Response createClient(JSONObject data) throws IOException, JSONException, InterruptedException {
-        final int id = clientData.getNewId();
+        final int id = lastClientId.incrementAndGet();
+
         ClientRecord record = new ClientRecord(id);
 
         updateClient(record, data);
@@ -388,7 +391,8 @@ public class Servlet
         return client;
     }
 
-    private PerishableCollection<ServletClientRecord> clientData = new PerishableCollection<ServletClientRecord>(5000);
+    private ConcurrentHashMap<Integer, ServletClientRecord> clientData = new ConcurrentHashMap<Integer, ServletClientRecord>();
+    private AtomicInteger lastClientId = new AtomicInteger();
 
     private JobQueue jobQueue = new JobQueue(10);
 
