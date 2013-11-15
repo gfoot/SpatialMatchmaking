@@ -209,50 +209,13 @@ public class Servlet
 
     @DELETE
     @Path("clients/{id}")
-    public Response deleteClient(@PathParam("id") int id) throws InterruptedException {
-        final ServletClientRecord client = getServletClientRecord(id);
-        client.deleted = true;
-
-        if (client.match_id == 0)
-        {
-            clientData.remove(id);
-        }
-        else
-        {
-            MatchRecord match = matchmaker.GetMatchRecord(client.match_id);
-            if (match == null)
+    public Response deleteClient(@PathParam("id") final int id) throws InterruptedException {
+        jobQueue.Enqueue(new Runnable() {
+            public void run()
             {
-                clientData.remove(id);
+                matchmaker.DeleteClient(id);
             }
-            else
-            {
-                boolean okToDelete = true;
-                for (int clientId : match.clients)
-                {
-                    ServletClientRecord otherClient = clientData.get(clientId);
-                    if (otherClient != null)
-                    {
-                        if (!otherClient.deleted)
-                            okToDelete = false;
-                    }
-                }
-
-                if (okToDelete)
-                {
-                    for (int clientId : match.clients)
-                    {
-                        clientData.remove(clientId);
-                    }
-
-                    jobQueue.Enqueue(new Runnable() {
-                        @Override
-                        public void run() {
-                            matchmaker.RemoveMatch(client.match_id);
-                        }
-                    });
-                }
-            }
-        }
+        });
 
         Log("DELETE " + id + " => accepted");
         return Response.status(202).build();
@@ -388,6 +351,9 @@ public class Servlet
 
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+
+        client.KeepAlive();
+
         return client;
     }
 

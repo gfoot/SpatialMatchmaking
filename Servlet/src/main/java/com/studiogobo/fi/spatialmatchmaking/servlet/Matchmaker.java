@@ -43,6 +43,13 @@ public class Matchmaker
         // Find compatible clients and add them to the list
         for (ServletClientRecord record : clientData.values())
         {
+            // Expire clients who have been idle for a long time
+            if (record.AgeMillis() > 60000)
+            {
+                DeleteClient(record.clientRecord.id);
+                continue;
+            }
+
             // Ignore clients already in sessions
             if (record.match_id != 0)
                 continue;
@@ -140,6 +147,47 @@ public class Matchmaker
         for (int clientId : match.clients)
         {
             UpdateClient(clientId);
+        }
+    }
+
+    public void DeleteClient(int id)
+    {
+        final ServletClientRecord client = clientData.get(id);
+        client.deleted = true;
+
+        if (client.match_id == 0)
+        {
+            clientData.remove(id);
+        }
+        else
+        {
+            MatchRecord match = GetMatchRecord(client.match_id);
+            if (match == null)
+            {
+                clientData.remove(id);
+                return;
+            }
+
+            boolean okToDelete = true;
+            for (int clientId : match.clients)
+            {
+                ServletClientRecord otherClient = clientData.get(clientId);
+                if (otherClient != null)
+                {
+                    if (!otherClient.deleted)
+                        okToDelete = false;
+                }
+            }
+
+            if (okToDelete)
+            {
+                for (int clientId : match.clients)
+                {
+                    clientData.remove(clientId);
+                }
+
+                RemoveMatch(client.match_id);
+            }
         }
     }
 
