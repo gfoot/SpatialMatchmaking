@@ -11,7 +11,7 @@ note over S1,S2: Submit client 40 for matchmaking
 
   C1->S1: GET /matches?client=40
   note over S1: waiting up to 30s
-  S1->C1: 404 Not found
+  S1->C1: 204 No content
 
 C1->S1: GET /matches?client=40
 note over S1: waiting up to 30s
@@ -39,4 +39,6 @@ note over S1,S2:
 The server finds two 'deleted' client resources, matched to each 
 other, and deletes the client records and the match record
 end note
+
+
 

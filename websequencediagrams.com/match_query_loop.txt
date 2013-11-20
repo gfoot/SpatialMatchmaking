@@ -11,10 +11,10 @@ loop until matched
   end note
 
   alt invalid client id
-    S->C: 401 Bad request
+    S->C: 404 Not found
     note over C: back to registration
   else timeout
-    S->C: 404 Not found, Retry-After 1s
+    S->C: 204 No content, Retry-After 1s
     note over C: resend requset
   else matched
     S->C: 307 SeeOther /matches/15
@@ -25,19 +25,20 @@ end
 C->S: GET /matches/15
 S->C: 200 OK
 note left of S:
-  @id: 15
+  id: 15
   clients: [40, 43]
 end note
 
 C->S: GET /clients/43
 S->C: 200 OK
 note left of S:
-   @id: 43
+   id: 43
+   uuid: ...
    location: ...
    requirements: { ... }
 end note
 
-note over C: connect to other client
+note over C: connect with other client
 
 C->S: DELETE /clients/40
 S->C: 202 Accepted

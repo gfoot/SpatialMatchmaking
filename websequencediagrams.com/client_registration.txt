@@ -3,6 +3,7 @@ title Matcher Flow - Client Registration
 note over C: connect
 C->S: POST /clients
   note right of C:
+    uuid: ...,
     location: ...,
     requirements: { ... }
   end note
@@ -16,7 +17,8 @@ opt Query the client resource
   C->S: GET /clients/40
   S->C: 200 OK
   note left of S:
-    @id: 40,
+    id: 40,
+    uuid: ...,
     location: ...,
     requirements: {...}
   end note
@@ -25,7 +27,7 @@ end
 opt Update the client resource
   C->S: PUT /clients/40
   note right of C:
-    @id: 40,
+    id: 40,
     location: ...,
     requirements: { ... }
   end note
@@ -48,4 +50,5 @@ opt Delete the client resource
     client will need to access it
   end note
 end
+
 
