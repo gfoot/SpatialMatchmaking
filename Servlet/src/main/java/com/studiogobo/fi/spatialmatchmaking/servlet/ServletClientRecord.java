@@ -28,4 +28,9 @@ public class ServletClientRecord extends Timestamped
             waitUntilMatched = new CountDownLatch(1);
         }
     }
+
+    public boolean RequirementsPass(ServletClientRecord other)
+    {
+        return clientRecord.RequirementsPass(other.clientRecord);
+    }
 }

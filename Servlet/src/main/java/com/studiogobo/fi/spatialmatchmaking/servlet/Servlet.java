@@ -187,12 +187,10 @@ public class Servlet
         if (client.match_id != 0)
         {
             final int match_id = client.match_id;
-            client.ClearMatch();
-
             jobQueue.Enqueue(new Runnable() {
                 @Override
                 public void run() {
-                    matchmaker.RemoveMatch(match_id);
+                    matchmaker.VerifyMatch(match_id);
                 }
             });
         }

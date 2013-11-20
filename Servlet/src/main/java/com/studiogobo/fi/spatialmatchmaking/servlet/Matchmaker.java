@@ -1,7 +1,6 @@
 package com.studiogobo.fi.spatialmatchmaking.servlet;
 
 import com.studiogobo.fi.spatialmatchmaking.model.*;
-import com.studiogobo.fi.spatialmatchmaking.model.requirements.Requirement;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,24 +62,7 @@ public class Matchmaker
                 continue;
 
             // Ignore incompatible clients
-            boolean ok = true;
-            for (Requirement req : record.clientRecord.requirements)
-            {
-                if (!req.Evaluate(record.clientRecord, primaryClientRecord.clientRecord))
-                {
-                    ok = false;
-                    break;
-                }
-            }
-            for (Requirement req : primaryClientRecord.clientRecord.requirements)
-            {
-                if (!req.Evaluate(primaryClientRecord.clientRecord, record.clientRecord))
-                {
-                    ok = false;
-                    break;
-                }
-            }
-            if (!ok)
+            if (!primaryClientRecord.RequirementsPass(record) || !record.RequirementsPass(primaryClientRecord))
                 continue;
 
             foundClients.add(record);
@@ -117,6 +99,34 @@ public class Matchmaker
 
                 // Signal anybody watching the record to say that it has changed
                 record.waitUntilMatched.countDown();
+            }
+        }
+    }
+
+    public void VerifyMatch(int id)
+    {
+        MatchRecord match = matchData.get(id);
+        if (match == null)
+            return;
+
+        // Check all the clients are still compatible with the match, and cancel the match if any are unhappy
+        for (int clientId : match.clients)
+        {
+            ServletClientRecord client = clientData.get(clientId);
+            if (client == null)
+            {
+                RemoveMatch(id);
+                return;
+            }
+
+            for (int otherClientId : match.clients)
+            {
+                ServletClientRecord otherClient = clientData.get(otherClientId);
+                if (otherClient == null || !client.RequirementsPass(otherClient))
+                {
+                    RemoveMatch(id);
+                    return;
+                }
             }
         }
     }

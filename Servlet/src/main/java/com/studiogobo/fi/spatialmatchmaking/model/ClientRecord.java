@@ -27,4 +27,16 @@ public class ClientRecord
     {
         id = _id;
     }
+
+    public boolean RequirementsPass(ClientRecord other)
+    {
+        for (Requirement req : requirements)
+        {
+            if (!req.Evaluate(this, other))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }
